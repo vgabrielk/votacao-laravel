@@ -26,4 +26,8 @@ Route::middleware(['auth', 'user.status'])->group(function () {
     Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
     Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
     Route::get('/groups/create', [GroupController::class, 'create'])->name('groups.create');
+
+Route::get('/groups/{group}', [GroupController::class, 'show'])->name('groups.show');
+Route::delete('/groups/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
+
 });

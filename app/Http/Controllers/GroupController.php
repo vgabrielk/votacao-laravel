@@ -41,9 +41,9 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Group $group)
     {
-        //
+        return view('groups.show', compact('group'));
     }
 
     /**
@@ -65,8 +65,9 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Group $group)
     {
-        //
+        $group->delete();
+        return redirect()->route('groups.index')->with('success', 'Group deleted successfuly');
     }
 }
