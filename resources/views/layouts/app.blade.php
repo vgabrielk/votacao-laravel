@@ -15,6 +15,15 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     @auth
+                    <div class="flex gap-4">
+
+                        <span>
+                            <a href="{{ route('dashboard') }}">Dashboard</a>
+                        </span>
+                        <span>
+                            <a href="{{ route('groups.index') }}">Grupos</a>
+                        </span>
+                    </div>
                         <span class="text-gray-700">Olá, {{ Auth::user()->name }}!</span>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
