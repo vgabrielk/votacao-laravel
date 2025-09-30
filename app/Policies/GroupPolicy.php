@@ -15,7 +15,10 @@ class GroupPolicy
     {
         return true;
     }
-
+    public function canAddMember(User $user, Group $group): bool
+    {
+        return $group->creator_id === $user->id;
+    }
     /**
      * Determine whether the user can view the model.
      */

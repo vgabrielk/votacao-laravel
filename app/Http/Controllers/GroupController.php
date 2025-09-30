@@ -5,29 +5,32 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GroupRequest;
 use Illuminate\Http\Request;
 use App\Models\Group;
+use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class GroupController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-public function index()
-{
-    $userId = Auth::id();
+    public function index()
+    {
+        $userId = Auth::id();
 
-    $groups = Group::with('members')
-        ->where(function ($q) use ($userId) {
-            $q->where('creator_id', $userId)
-              ->orWhereHas('members', function ($m) use ($userId) {
-                  $m->where('user_id', $userId);
-              });
-        })
-        ->orderBy('id', 'desc')
-        ->paginate(10);
+        $groups = Group::with('members')
+            ->where(function ($q) use ($userId) {
+                $q->where('creator_id', $userId)
+                  ->orWhereHas('members', function ($m) use ($userId) {
+                      $m->where('user_id', $userId);
+                  });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
-    return view('groups.groups', compact('groups'));
-}
+        return view('groups.groups', compact('groups'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -81,4 +84,54 @@ public function index()
         $group->delete();
         return redirect()->route('groups.index')->with('success', 'Group deleted successfuly');
     }
+
+
+    public function addMember(Request $request, Group $group)
+    {
+        $this->authorize('canAddMember', $group);
+
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        try {
+            $user = User::where('email', $request->email)->first();
+
+            if (! $user) {
+                return redirect()
+                    ->route('groups.index')
+                    ->with('error', 'Usuário não encontrado!');
+            }
+
+            $group->members()->attach($user->id, [
+                'role'       => 'member',
+                'status'     => 'active',
+                'invited_by' => Auth::user()->id,
+                'group_id' => $group->id,
+
+            ]);
+
+            return redirect()
+                ->route('groups.index')
+                ->with('success', 'Usuário adicionado com sucesso!');
+        } catch (QueryException $e) {
+            Log::error('Erro ao adicionar membro ao grupo', [
+                'group_id' => $group->id,
+                'email'    => $request->email,
+                'error'    => $e->getMessage(),
+            ]);
+
+            return redirect()
+                ->route('groups.index')
+                ->with('error', 'Ocorreu um erro ao adicionar o usuário.');
+        } catch (\Exception $e) {
+            Log::error('Erro inesperado ao adicionar membro', [
+                'error' => $e->getMessage(),
+            ]);
+            return redirect()
+                ->route('groups.index')
+                ->with('error', 'Erro inesperado, tente novamente.');
+        }
+    }
+
 }
