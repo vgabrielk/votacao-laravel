@@ -2,30 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendMailJob;
+use App\Mail\FriendRequestMail;
 use App\Models\User;
 use App\Models\UserFriendList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class FriendsController extends Controller
 {
     public function index()
     {
-       $user = Auth::user();
+        $user = Auth::user();
 
-    // Pega os amigos que o usuário enviou
-    $friendsSent = $user->friends()->get();
+        // Pega os amigos que o usuário enviou
+        $friendsSent = $user->friends()->get();
 
-    // Pega os amigos que enviaram amizade ao usuário
-    $friendsReceived = $user->friendsReceived()->get();
+        // Pega os amigos que enviaram amizade ao usuário
+        $friendsReceived = $user->friendsReceived()->get();
 
-    // Une as duas coleções
-    $allFriends = $friendsSent->merge($friendsReceived);
+        // Une as duas coleções
+        $allFriends = $friendsSent->merge($friendsReceived);
 
-    return view('friends.friends', [
-        'user' => $user,
-        'friends' => $allFriends
-    ]);
+        return view('friends.friends', [
+            'user' => $user,
+            'friends' => $allFriends
+        ]);
 
     }
 
@@ -38,18 +41,31 @@ class FriendsController extends Controller
     {
 
         $request->validate([
-            'email' => 'string|email',
+            'email' => 'required|string|email|exists:users,email',
         ]);
 
         $user = Auth::user();
-        $friend = User::select('email', 'id')->where('email', $request->email)->first();
+        $friend = User::where('email', $request->email)->first();
+        if ($friend->id === $user->id) {
+            return redirect()->back()->with('error', 'You cannot add yourself.');
+        }
 
-        $user->friends()->attach($friend->id, [
-            'status' => 'pending',
-            'invited_by' => $user->id,
+        $user->friends()->syncWithoutDetaching([
+            $friend->id => [
+                'status' => 'pending',
+                'invited_by' => $user->id,
+            ]
         ]);
 
-        return redirect()->route('friends.index')->with('success', 'Invited');
+        $url = route('friends.index');
+
+        //Envia e-mail diretão sem background(mais demorado)
+        Mail::to($friend->email)->send(new FriendRequestMail($user, $url));
+
+        // Envia e-mail em background
+        // SendMailJob::dispatch($friend->email, new FriendRequestMail($user, $url));
+
+        return redirect()->route('friends.index')->with('success', 'Invitation sent!');
     }
 
     public function rejectFriend($pivotId)
