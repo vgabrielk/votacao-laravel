@@ -2,16 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\FriendsController;
 use App\Http\Controllers\GroupController;
-
 use App\Http\Controllers\PollController;
-
 use Illuminate\Support\Facades\Auth;
 
 // Rotas públicas
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 // Rotas de autenticação
@@ -20,6 +19,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+
+    Route::post('/auth/google', [GoogleController::class, 'handleGoogleAuth']);
 });
 
 // Rotas protegidas
