@@ -33,7 +33,8 @@ class GroupService
         }
     }
 
-    public function getAllGroupsWithMembers($userId){
+    public function getAllGroupsWithMembers($userId)
+    {
         $groups = Group::with('members')
             ->where(function ($q) use ($userId) {
                 $q->where('creator_id', $userId)
@@ -44,17 +45,21 @@ class GroupService
             ->orderBy('id', 'desc')
             ->paginate(10);
 
-            return $groups;
+
+        return $groups;
+
     }
 
-    public function createNewGroup($user, $data): ServiceResult{
+    public function createNewGroup($user, $data): ServiceResult
+    {
         $group = new Group($data);
         $group->creator()->associate($user);
         $group->save();
         return ServiceResult::success('Grupo criado com sucesso! Você já pode começar a adicionar membros.');
     }
 
-    public function destroyGroup(Group $group): ServiceResult{
+    public function destroyGroup(Group $group): ServiceResult
+    {
         try {
             $group->delete();
             return ServiceResult::success('Grupo excluído com sucesso!');

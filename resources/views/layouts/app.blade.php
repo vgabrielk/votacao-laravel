@@ -36,11 +36,15 @@
             <div class="p-6 border-b border-gray-700">
                 <div class="flex items-center justify-center relative">
                     <img src="/images/logo.png" alt="Logo" class="w-24 h-24 object-contain">
+
                     <!-- Close button for mobile -->
                     <button id="close-sidebar" class="lg:hidden absolute right-0 p-2 text-gray-300 hover:text-white">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
+                    <div class="text-center min-w-0">
+                        <p class="text-gray-300 text-xs truncate">{{ Auth::user()->email }}</p>
+                    </div>
             </div>
 
             <!-- Navigation -->
@@ -61,18 +65,10 @@
 
             <!-- User Profile -->
             <div class="p-4 border-t border-gray-700">
-                <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                        <span class="text-white font-semibold text-sm">{{ substr(Auth::user()->name, 0, 1) }}</span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-white font-medium truncate">{{ Auth::user()->name }}</p>
-                        <p class="text-gray-300 text-xs truncate">{{ Auth::user()->email }}</p>
-                    </div>
-                </div>
+
                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                     @csrf
-                    <button type="submit" class="w-full flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-red-300">
+                    <button type="submit" class="w-full flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-white">
                         <i data-lucide="log-out" class="w-4 h-4"></i>
                         <span>Sair</span>
                     </button>

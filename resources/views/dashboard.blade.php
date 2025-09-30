@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="flex items-center space-x-3 sm:space-x-4 mb-4 sm:mb-6">
-                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
                         <span class="text-white font-bold text-lg sm:text-xl">{{ substr($user->name, 0, 1) }}</span>
                     </div>
                     <div class="flex-1 min-w-0">
