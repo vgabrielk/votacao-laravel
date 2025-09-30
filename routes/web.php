@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FriendsController;
 use App\Http\Controllers\GroupController;
+use Illuminate\Support\Facades\Auth;
 
 // Rotas públicas
 Route::get('/', function () {
@@ -21,7 +22,7 @@ Route::middleware('guest')->group(function () {
 // Rotas protegidas
 Route::middleware(['auth', 'user.status'])->group(function () {
     Route::get('/dashboard', function () {
-        $user = auth()->user();
+        $user = Auth::user();
         $user->load(['friends', 'friendRequests', 'groups']);
         return view('dashboard', compact('user'));
     })->name('dashboard');
