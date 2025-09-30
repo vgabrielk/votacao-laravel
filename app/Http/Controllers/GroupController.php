@@ -12,11 +12,22 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $groups = Group::orderBy('id', 'desc')->paginate(10);
-        return view('groups.groups', compact('groups'));
-    }
+public function index()
+{
+    $userId = Auth::id();
+
+    $groups = Group::with('members')
+        ->where(function ($q) use ($userId) {
+            $q->where('creator_id', $userId)
+              ->orWhereHas('members', function ($m) use ($userId) {
+                  $m->where('user_id', $userId);
+              });
+        })
+        ->orderBy('id', 'desc')
+        ->paginate(10);
+
+    return view('groups.groups', compact('groups'));
+}
 
     /**
      * Show the form for creating a new resource.
