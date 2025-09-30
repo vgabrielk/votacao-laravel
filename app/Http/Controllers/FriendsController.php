@@ -2,34 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SendMailJob;
-use App\Mail\FriendRequestMail;
-use App\Models\User;
-use App\Models\UserFriendList;
+use App\Services\FriendService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
 class FriendsController extends Controller
 {
+    public function __construct(
+        private FriendService $friendService
+    ) {}
+
     public function index()
     {
         $user = Auth::user();
+        $result = $this->friendService->getUserFriendsData($user);
 
-        // Pega os amigos que o usuário enviou
-        $friendsSent = $user->friends()->get();
+        if (!$result->success) {
+            return redirect()->back()->with('error', $result->message);
+        }
 
-        // Pega os amigos que enviaram amizade ao usuário
-        $friendsReceived = $user->friendsReceived()->get();
-
-        // Une as duas coleções
-        $allFriends = $friendsSent->merge($friendsReceived);
-
-        return view('friends.friends', [
-            'user' => $user,
-            'friends' => $allFriends
-        ]);
-
+        return view('friends.friends', $result->data);
     }
 
     public function create()
@@ -39,75 +31,29 @@ class FriendsController extends Controller
 
     public function addFriend(Request $request)
     {
-
         $request->validate([
             'email' => 'required|string|email|exists:users,email',
         ]);
 
-        $user = Auth::user();
-        $friend = User::where('email', $request->email)->first();
-        if ($friend->id === $user->id) {
-            return redirect()->back()->with('error', 'Você não pode adicionar a si mesmo como amigo.');
-        }
+        $result = $this->friendService->sendFriendRequest($request->email);
 
-        $user->friends()->syncWithoutDetaching([
-            $friend->id => [
-                'status' => 'pending',
-                'invited_by' => $user->id,
-            ]
-        ]);
-
-        $url = route('friends.index');
-
-        //Envia e-mail diretão sem background(mais demorado)
-        Mail::to($friend->email)->send(new FriendRequestMail($user, $url));
-
-        // Envia e-mail em background
-        // SendMailJob::dispatch($friend->email, new FriendRequestMail($user, $url));
-
-        return redirect()->route('friends.index')->with('success', 'Convite de amizade enviado com sucesso!');
+        return redirect()->route('friends.index')
+            ->with($result->success ? 'success' : 'error', $result->message);
     }
 
     public function rejectFriend($pivotId)
     {
-        $user = Auth::user();
+        $result = $this->friendService->rejectFriendRequest($pivotId);
 
-        $pivot = UserFriendList::where('id', $pivotId)
-                    ->where(function ($query) use ($user) {
-                        $query->where('user_id', $user->id)
-                              ->orWhere('friend_id', $user->id);
-                    })
-                    ->first();
-
-        if (!$pivot) {
-            return redirect()->route('friends.index')->with('error', 'Solicitação de amizade não encontrada.');
-        }
-
-        // Atualiza status para 'blocked'
-        $pivot->update(['status' => 'blocked']);
-
-        return redirect()->route('friends.index')->with('success', 'Solicitação de amizade rejeitada com sucesso.');
-
+        return redirect()->route('friends.index')
+            ->with($result->success ? 'success' : 'error', $result->message);
     }
+
     public function acceptFriend($pivotId)
     {
-        $user = Auth::user();
+        $result = $this->friendService->acceptFriendRequest($pivotId);
 
-        $pivot = UserFriendList::where('id', $pivotId)
-                    ->where(function ($query) use ($user) {
-                        $query->where('user_id', $user->id)
-                              ->orWhere('friend_id', $user->id);
-                    })
-                    ->first();
-
-        if (!$pivot) {
-            return redirect()->route('friends.index')->with('error', 'Solicitação de amizade não encontrada.');
-        }
-
-        // Atualiza status para 'blocked'
-        $pivot->update(['status' => 'accepted']);
-
-        return redirect()->route('friends.index')->with('success', 'Solicitação de amizade aceita com sucesso!');
-
+        return redirect()->route('friends.index')
+            ->with($result->success ? 'success' : 'error', $result->message);
     }
 }
