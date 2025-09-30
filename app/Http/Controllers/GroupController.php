@@ -6,12 +6,18 @@ use App\Http\Requests\GroupRequest;
 use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Models\User;
+use App\Services\GroupService;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class GroupController extends Controller
 {
+    public function __construct(
+        private GroupService $groupService
+    ) {
+
+    }
     /**
      * Display a listing of the resource.
      */
@@ -91,49 +97,11 @@ class GroupController extends Controller
 
         $this->authorize('canManageGroup', $group);
 
+        $result = $this->groupService->addMember($request->email, $group);
 
-        $request->validate([
-            'email' => 'required|email'
-        ]);
+        return redirect()->route('groups.index')
+            ->with($result->success ? 'success' : 'error', $result->message);
 
-        try {
-            $user = User::where('email', $request->email)->first();
-
-            if (! $user) {
-                return redirect()
-                    ->route('groups.index')
-                    ->with('error', 'Usuário não encontrado. Verifique o e-mail informado e tente novamente.');
-            }
-
-            $group->members()->attach($user->id, [
-                'role'       => 'member',
-                'status'     => 'active',
-                'invited_by' => Auth::user()->id,
-                'group_id' => $group->id,
-
-            ]);
-
-            return redirect()
-                ->route('groups.index')
-                ->with('success', 'Membro adicionado ao grupo com sucesso!');
-        } catch (QueryException $e) {
-            Log::error('Erro ao adicionar membro ao grupo', [
-                'group_id' => $group->id,
-                'email'    => $request->email,
-                'error'    => $e->getMessage(),
-            ]);
-
-            return redirect()
-                ->route('groups.index')
-                ->with('error', 'Erro ao adicionar membro ao grupo. O usuário pode já estar no grupo.');
-        } catch (\Exception $e) {
-            Log::error('Erro inesperado ao adicionar membro', [
-                'error' => $e->getMessage(),
-            ]);
-            return redirect()
-                ->route('groups.index')
-                ->with('error', 'Erro inesperado. Tente novamente em alguns instantes.');
-        }
     }
 
 }
