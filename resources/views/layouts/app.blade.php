@@ -17,12 +17,23 @@
 <body class="bg-gray-50">
     @auth
     <div class="flex h-screen">
+        <!-- Mobile Sidebar Overlay -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
+        
         <!-- Sidebar -->
-        <div class="w-64 sidebar-gradient text-white flex flex-col">
+        <div id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
             <!-- Logo -->
             <div class="p-6 border-b border-gray-700">
-                <h1 class="text-2xl font-bold text-white">Votação</h1>
-                <p class="text-gray-300 text-sm">Conecte-se com amigos</p>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">Votação</h1>
+                        <p class="text-gray-300 text-sm">Conecte-se com amigos</p>
+                    </div>
+                    <!-- Close button for mobile -->
+                    <button id="close-sidebar" class="lg:hidden p-2 text-gray-300 hover:text-white">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Navigation -->
@@ -47,9 +58,9 @@
                     <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold text-sm">{{ substr(Auth::user()->name, 0, 1) }}</span>
                     </div>
-                    <div>
-                        <p class="text-white font-medium">{{ Auth::user()->name }}</p>
-                        <p class="text-gray-300 text-xs">{{ Auth::user()->email }}</p>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-white font-medium truncate">{{ Auth::user()->name }}</p>
+                        <p class="text-gray-300 text-xs truncate">{{ Auth::user()->email }}</p>
                     </div>
                 </div>
                 <form method="POST" action="{{ route('logout') }}" class="w-full">
@@ -66,9 +77,15 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Top Bar -->
             <header class="bg-white shadow-sm border-b border-gray-200">
-                <div class="px-6 py-4">
+                <div class="px-4 sm:px-6 py-4">
                     <div class="flex items-center justify-between">
-                        <h2 class="text-2xl font-semibold text-gray-800">@yield('page-title', 'Dashboard')</h2>
+                        <div class="flex items-center space-x-4">
+                            <!-- Mobile menu button -->
+                            <button id="open-sidebar" class="lg:hidden p-2 text-gray-600 hover:text-gray-900">
+                                <i data-lucide="menu" class="w-5 h-5"></i>
+                            </button>
+                            <h2 class="text-xl sm:text-2xl font-semibold text-gray-800">@yield('page-title', 'Dashboard')</h2>
+                        </div>
                         <div class="flex items-center space-x-4">
                             <div class="relative">
                                 <button class="p-2 text-gray-400 hover:text-gray-600 transition-colors">
@@ -83,7 +100,7 @@
             <!-- Page Content -->
             <main class="flex-1 overflow-y-auto bg-gray-50">
                 @if(session('success'))
-                    <div class="mx-6 mt-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
+                    <div class="mx-4 sm:mx-6 mt-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
                         <div class="flex items-center">
                             <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>
                             {{ session('success') }}
@@ -92,7 +109,7 @@
                 @endif
 
                 @if(session('error'))
-                    <div class="mx-6 mt-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+                    <div class="mx-4 sm:mx-6 mt-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
                         <div class="flex items-center">
                             <i data-lucide="alert-circle" class="w-5 h-5 mr-2"></i>
                             {{ session('error') }}
@@ -139,6 +156,58 @@
 
     <script>
         lucide.createIcons();
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const openSidebarBtn = document.getElementById('open-sidebar');
+            const closeSidebarBtn = document.getElementById('close-sidebar');
+            
+            function openSidebar() {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+            
+            function closeSidebar() {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+            
+            // Open sidebar
+            if (openSidebarBtn) {
+                openSidebarBtn.addEventListener('click', openSidebar);
+            }
+            
+            // Close sidebar
+            if (closeSidebarBtn) {
+                closeSidebarBtn.addEventListener('click', closeSidebar);
+            }
+            
+            // Close sidebar when clicking overlay
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', closeSidebar);
+            }
+            
+            // Close sidebar when clicking on navigation links (mobile)
+            const navLinks = sidebar.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        closeSidebar();
+                    }
+                });
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1024) {
+                    closeSidebar();
+                }
+            });
+        });
     </script>
 </body>
 </html>

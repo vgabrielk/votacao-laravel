@@ -8,10 +8,6 @@
         <!-- Header Section -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
             <div class="flex items-center space-x-4">
-                <div
-                    class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                    <i data-lucide="users-2" class="w-8 h-8 text-white"></i>
-                </div>
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">{{ $group->name }}</h1>
                     <p class="text-gray-600">{{ $group->description }}</p>

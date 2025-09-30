@@ -88,7 +88,9 @@ class GroupController extends Controller
 
     public function addMember(Request $request, Group $group)
     {
-        $this->authorize('canAddMember', $group);
+
+$this->authorize('canManageGroup', $group);
+
 
         $request->validate([
             'email' => 'required|email'
