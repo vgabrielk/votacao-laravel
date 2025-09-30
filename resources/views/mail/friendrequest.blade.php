@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Nova Solicitação de Amizade - Votação</title>
+    <title>Nova Solicitação de Amizade - Choicefy</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -339,7 +339,7 @@
             <div class="header-content">
 
                 <h1>Nova Solicitação de Amizade</h1>
-                <p>Conecte-se com seus amigos na plataforma Votação</p>
+                <p>Conecte-se com seus amigos na plataforma Choicefy</p>
             </div>
         </div>
 
@@ -350,7 +350,7 @@
             </div>
 
             <div class="message">
-                <p>Você recebeu uma nova solicitação de amizade na plataforma <strong>Votação</strong>.</p>
+                <p>Você recebeu uma nova solicitação de amizade na plataforma <strong>Choicefy</strong>.</p>
                 <p>Alguém gostaria de se conectar com você e fazer parte da sua rede de amigos. Que tal dar uma olhada e
                     decidir se aceita esta nova conexão?</p>
             </div>
@@ -386,7 +386,7 @@
                 </div>
 
                 <p class="copyright">
-                    &copy; {{ date('Y') }} <strong>Votação</strong>. Todos os direitos reservados.
+                    &copy; {{ date('Y') }} <strong>Choicefy</strong>. Todos os direitos reservados.
                 </p>
             </div>
         </div>

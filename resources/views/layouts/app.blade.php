@@ -12,12 +12,12 @@
         .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
         .sidebar-gradient { background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); }
-        
+
         /* Remove outline padrão dos inputs */
         input:focus, textarea:focus, select:focus {
             outline: none !important;
         }
-        
+
         /* Remove outline dos botões */
         button:focus {
             outline: none !important;
@@ -29,14 +29,14 @@
     <div class="flex h-screen">
         <!-- Mobile Sidebar Overlay -->
         <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
-        
+
         <!-- Sidebar -->
         <div id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
             <!-- Logo -->
             <div class="p-6 border-b border-gray-700">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-2xl font-bold text-white">Votação</h1>
+                        <h1 class="text-2xl font-bold text-white">Choicefy</h1>
                         <p class="text-gray-300 text-sm">Conecte-se com amigos</p>
                     </div>
                     <!-- Close button for mobile -->
@@ -137,7 +137,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <a href="/" class="text-xl font-bold text-gray-800">Votação</a>
+                    <a href="/" class="text-xl font-bold text-gray-800">Choicefy</a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900">Entrar</a>
@@ -166,41 +166,41 @@
 
     <script>
         lucide.createIcons();
-        
+
         // Sidebar toggle functionality
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebar');
             const sidebarOverlay = document.getElementById('sidebar-overlay');
             const openSidebarBtn = document.getElementById('open-sidebar');
             const closeSidebarBtn = document.getElementById('close-sidebar');
-            
+
             function openSidebar() {
                 sidebar.classList.remove('-translate-x-full');
                 sidebarOverlay.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
             }
-            
+
             function closeSidebar() {
                 sidebar.classList.add('-translate-x-full');
                 sidebarOverlay.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
             }
-            
+
             // Open sidebar
             if (openSidebarBtn) {
                 openSidebarBtn.addEventListener('click', openSidebar);
             }
-            
+
             // Close sidebar
             if (closeSidebarBtn) {
                 closeSidebarBtn.addEventListener('click', closeSidebar);
             }
-            
+
             // Close sidebar when clicking overlay
             if (sidebarOverlay) {
                 sidebarOverlay.addEventListener('click', closeSidebar);
             }
-            
+
             // Close sidebar when clicking on navigation links (mobile)
             const navLinks = sidebar.querySelectorAll('nav a');
             navLinks.forEach(link => {
@@ -210,7 +210,7 @@
                     }
                 });
             });
-            
+
             // Handle window resize
             window.addEventListener('resize', function() {
                 if (window.innerWidth >= 1024) {
