@@ -12,6 +12,16 @@
         .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
         .sidebar-gradient { background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); }
+        
+        /* Remove outline padrão dos inputs */
+        input:focus, textarea:focus, select:focus {
+            outline: none !important;
+        }
+        
+        /* Remove outline dos botões */
+        button:focus {
+            outline: none !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
