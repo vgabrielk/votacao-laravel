@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GroupRequest;
 use Illuminate\Http\Request;
 use App\Models\Group;
-use App\Models\User;
 use App\Services\GroupService;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class GroupController extends Controller
 {
@@ -25,16 +22,8 @@ class GroupController extends Controller
     {
         $userId = Auth::id();
 
-        $groups = Group::with('members')
-            ->where(function ($q) use ($userId) {
-                $q->where('creator_id', $userId)
-                  ->orWhereHas('members', function ($m) use ($userId) {
-                      $m->where('user_id', $userId);
-                  });
-            })
-            ->orderBy('id', 'desc')
-            ->paginate(10);
 
+        $groups = $this->groupService->getAllGroupsWithMembers($userId);
         return view('groups.groups', compact('groups'));
     }
 
@@ -52,10 +41,12 @@ class GroupController extends Controller
     public function store(GroupRequest $request)
     {
         $user = Auth::user();
-        $group = new Group($request->validated());
-        $group->creator()->associate($user);
-        $group->save();
-        return redirect()->route('groups.index')->with('success', 'Grupo criado com sucesso! Você já pode começar a adicionar membros.');
+
+        $result = $this->groupService->createNewGroup($user, $request->validated());
+
+        return redirect()->route('groups.index')
+        ->with($result->success ? 'success' : 'error', $result->message);
+
     }
 
     /**
@@ -87,8 +78,9 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        $group->delete();
-        return redirect()->route('groups.index')->with('success', 'Grupo excluído com sucesso!');
+        $result = $this->groupService->destroyGroup($group);
+        return redirect()->route('groups.index')
+            ->with($result->success ? 'success' : 'error', $result->message);
     }
 
 

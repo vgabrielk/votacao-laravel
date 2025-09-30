@@ -32,4 +32,35 @@ class GroupService
             return ServiceResult::error('Erro inesperado. Tente novamente em alguns instantes.');
         }
     }
+
+    public function getAllGroupsWithMembers($userId){
+        $groups = Group::with('members')
+            ->where(function ($q) use ($userId) {
+                $q->where('creator_id', $userId)
+                  ->orWhereHas('members', function ($m) use ($userId) {
+                      $m->where('user_id', $userId);
+                  });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+
+            return $groups;
+    }
+
+    public function createNewGroup($user, $data): ServiceResult{
+        $group = new Group($data);
+        $group->creator()->associate($user);
+        $group->save();
+        return ServiceResult::success('Grupo criado com sucesso! Você já pode começar a adicionar membros.');
+    }
+
+    public function destroyGroup(Group $group): ServiceResult{
+        try {
+            $group->delete();
+            return ServiceResult::success('Grupo excluído com sucesso!');
+
+        } catch (\Throwable $th) {
+            return ServiceResult::error('Erro ao excluir grupo!', $th->getMessage());
+        }
+    }
 }
