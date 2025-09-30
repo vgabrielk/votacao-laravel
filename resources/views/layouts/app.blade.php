@@ -34,13 +34,10 @@
         <div id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
             <!-- Logo -->
             <div class="p-6 border-b border-gray-700">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold text-white">Choicefy</h1>
-                        <p class="text-gray-300 text-sm">Conecte-se com amigos</p>
-                    </div>
+                <div class="flex items-center justify-center relative">
+                    <img src="/images/logo.png" alt="Logo" class="w-24 h-24 object-contain">
                     <!-- Close button for mobile -->
-                    <button id="close-sidebar" class="lg:hidden p-2 text-gray-300 hover:text-white">
+                    <button id="close-sidebar" class="lg:hidden absolute right-0 p-2 text-gray-300 hover:text-white">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
@@ -137,7 +134,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <a href="/" class="text-xl font-bold text-gray-800">Choicefy</a>
+                    <a href="/" class="flex items-center">
+                        <img src="/images/logo.png" alt="Logo" class="w-10 h-10 object-contain">
+                    </a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900">Entrar</a>
