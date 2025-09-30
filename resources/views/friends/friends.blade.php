@@ -32,7 +32,7 @@
                     <p class="text-green-100 text-sm">Amigos Aceitos</p>
                     <p class="text-2xl font-bold">{{ $friends->where('pivot.status', 'accepted')->count() }}</p>
                 </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-user-line text-xl"></i>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                     <p class="text-yellow-100 text-sm">Solicitações Pendentes</p>
                     <p class="text-2xl font-bold">{{ $user->friendRequests->where('pivot.status', 'pending')->count() }}</p>
                 </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-time-line text-xl"></i>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     <p class="text-blue-100 text-sm">Total de Conexões</p>
                     <p class="text-2xl font-bold">{{ $friends->count() + $user->friendRequests->count() }}</p>
                 </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-user-add-line text-xl"></i>
                 </div>
             </div>
@@ -102,25 +102,17 @@
                             Aceitar
                         </button>
                     </form>
-                    <form action="{{ route('friends.removeFriend', $friend->id) }}" method="POST" class="flex-1">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer bg-red-600 text-white hover:bg-red-700 px-4 py-2 text-sm">
-                            <i class="ri-close-line mr-2"></i>
-                            Recusar
-                        </button>
-                    </form>
+                    <button onclick="confirmRejectFriend('{{ $friend->id }}', '{{ $friend->name }}')" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer bg-red-600 text-white hover:bg-red-700 px-4 py-2 text-sm">
+                        <i class="ri-close-line mr-2"></i>
+                        Recusar
+                    </button>
                 </div>
                 @elseif ($friend->pivot->status === 'accepted')
                 <div class="flex space-x-2">
-                    <form action="{{ route('friends.removeFriend', $friend->id) }}" method="POST" class="flex-1">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 text-sm">
-                            <i class="ri-user-unfollow-line mr-2"></i>
-                            Remover
-                        </button>
-                    </form>
+                    <button onclick="confirmRemoveFriend('{{ $friend->id }}', '{{ $friend->name }}')" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 text-sm">
+                        <i class="ri-user-unfollow-line mr-2"></i>
+                        Remover
+                    </button>
                 </div>
                 @endif
             </div>
@@ -161,14 +153,10 @@
                             Aceitar
                         </button>
                     </form>
-                    <form action="{{ route('friends.removeFriend', $friendRequest->pivot->id) }}" method="POST" class="flex-1">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer bg-red-600 text-white hover:bg-red-700 px-4 py-2 text-sm">
-                            <i class="ri-close-line mr-2"></i>
-                            Recusar
-                        </button>
-                    </form>
+                    <button onclick="confirmRejectFriend('{{ $friendRequest->pivot->id }}', '{{ $friendRequest->name }}')" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer bg-red-600 text-white hover:bg-red-700 px-4 py-2 text-sm">
+                        <i class="ri-close-line mr-2"></i>
+                        Recusar
+                    </button>
                 </div>
             </div>
             @endforeach
@@ -190,5 +178,65 @@
         </a>
     </div>
     @endif
-</div>
+    </div>
+
+    <script>
+        function confirmRemoveFriend(friendId, friendName) {
+            openConfirmationModal(
+                'Remover Amigo',
+                `Tem certeza que deseja remover ${friendName} da sua lista de amigos?`,
+                'Remover',
+                function() {
+                    // Create and submit form
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/friends/${friendId}`;
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    
+                    const methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    methodField.value = 'DELETE';
+                    
+                    form.appendChild(csrfToken);
+                    form.appendChild(methodField);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            );
+        }
+
+        function confirmRejectFriend(friendId, friendName) {
+            openConfirmationModal(
+                'Recusar Solicitação',
+                `Tem certeza que deseja recusar a solicitação de amizade de ${friendName}?`,
+                'Recusar',
+                function() {
+                    // Create and submit form
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/friends/${friendId}`;
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    
+                    const methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    methodField.value = 'DELETE';
+                    
+                    form.appendChild(csrfToken);
+                    form.appendChild(methodField);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            );
+        }
+    </script>
 @endsection

@@ -489,6 +489,103 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                
+                                <!-- Pagination -->
+                                <div class="flex items-center justify-between mt-6 px-6 py-4">
+                                    <div class="text-sm text-gray-600">
+                                        Mostrando <span class="font-medium">1</span> a <span class="font-medium">10</span> de <span class="font-medium">97</span> resultados
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="inline-flex items-center justify-center font-medium rounded-lg transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 p-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                            <i class="ri-arrow-left-s-line"></i>
+                                        </button>
+                                        <div class="flex items-center space-x-1">
+                                            <button class="inline-flex items-center justify-center font-medium rounded-lg transition-colors whitespace-nowrap cursor-pointer bg-purple-600 text-white hover:bg-purple-700 px-3 py-2 text-sm">1</button>
+                                            <button class="inline-flex items-center justify-center font-medium rounded-lg transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-3 py-2 text-sm">2</button>
+                                            <button class="inline-flex items-center justify-center font-medium rounded-lg transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-3 py-2 text-sm">3</button>
+                                            <span class="px-2 text-gray-500">...</span>
+                                            <button class="inline-flex items-center justify-center font-medium rounded-lg transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-3 py-2 text-sm">10</button>
+                                        </div>
+                                        <button class="inline-flex items-center justify-center font-medium rounded-lg transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 p-2 text-sm">
+                                            <i class="ri-arrow-right-s-line"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Modals & Popups Section -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6">🪟 Modais & Popups</h2>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Confirmation Modal -->
+                            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                                <h3 class="text-lg font-semibold mb-4">Modal de Confirmação</h3>
+                                <div class="space-y-4">
+                                    <button onclick="openConfirmationModal()" class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-red-600 text-white hover:bg-red-700 px-4 py-2 text-sm w-full">
+                                        <i class="ri-delete-bin-line mr-2"></i>Exemplo de Confirmação
+                                    </button>
+                                    
+                                    <!-- Confirmation Modal -->
+                                    <div id="confirmationModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+                                        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+                                            <div class="p-6">
+                                                <div class="flex items-center space-x-3 mb-4">
+                                                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                                                        <i class="ri-alert-line text-red-600 text-xl"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h3 class="text-lg font-semibold text-gray-900">Confirmar Ação</h3>
+                                                        <p class="text-sm text-gray-600">Esta ação não pode ser desfeita</p>
+                                                    </div>
+                                                </div>
+                                                <p class="text-gray-700 mb-6">Tem certeza que deseja remover este item? Esta ação é permanente e não pode ser desfeita.</p>
+                                                <div class="flex space-x-3">
+                                                    <button onclick="closeConfirmationModal()" class="flex-1 inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 text-sm">
+                                                        Cancelar
+                                                    </button>
+                                                    <button onclick="confirmAction()" class="flex-1 inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-red-600 text-white hover:bg-red-700 px-4 py-2 text-sm">
+                                                        <i class="ri-delete-bin-line mr-2"></i>Confirmar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Success Modal -->
+                            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                                <h3 class="text-lg font-semibold mb-4">Modal de Sucesso</h3>
+                                <div class="space-y-4">
+                                    <button onclick="openSuccessModal()" class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-green-600 text-white hover:bg-green-700 px-4 py-2 text-sm w-full">
+                                        <i class="ri-check-line mr-2"></i>Exemplo de Sucesso
+                                    </button>
+                                    
+                                    <!-- Success Modal -->
+                                    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+                                        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+                                            <div class="p-6">
+                                                <div class="flex items-center space-x-3 mb-4">
+                                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                                        <i class="ri-check-line text-green-600 text-xl"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h3 class="text-lg font-semibold text-gray-900">Sucesso!</h3>
+                                                        <p class="text-sm text-gray-600">Operação realizada com sucesso</p>
+                                                    </div>
+                                                </div>
+                                                <p class="text-gray-700 mb-6">A ação foi executada com sucesso. Você pode continuar usando o sistema normalmente.</p>
+                                                <div class="flex justify-end">
+                                                    <button onclick="closeSuccessModal()" class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-green-600 text-white hover:bg-green-700 px-6 py-2 text-sm">
+                                                        <i class="ri-check-line mr-2"></i>Entendi
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -581,6 +678,49 @@
             </div>
         </main>
     </div>
+
+    <script>
+        // Confirmation Modal Functions
+        function openConfirmationModal() {
+            document.getElementById('confirmationModal').classList.remove('hidden');
+        }
+
+        function closeConfirmationModal() {
+            document.getElementById('confirmationModal').classList.add('hidden');
+        }
+
+        function confirmAction() {
+            alert('Ação confirmada! (Em um sistema real, aqui seria executada a ação)');
+            closeConfirmationModal();
+        }
+
+        // Success Modal Functions
+        function openSuccessModal() {
+            document.getElementById('successModal').classList.remove('hidden');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.add('hidden');
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(event) {
+            if (event.target.id === 'confirmationModal') {
+                closeConfirmationModal();
+            }
+            if (event.target.id === 'successModal') {
+                closeSuccessModal();
+            }
+        });
+
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeConfirmationModal();
+                closeSuccessModal();
+            }
+        });
+    </script>
 </body>
 </html>
 

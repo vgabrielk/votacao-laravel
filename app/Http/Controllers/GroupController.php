@@ -21,8 +21,6 @@ class GroupController extends Controller
     public function index()
     {
         $userId = Auth::id();
-
-
         $groups = $this->groupService->getAllGroupsWithMembers($userId);
         return view('groups.groups', compact('groups'));
     }

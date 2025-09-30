@@ -7,7 +7,31 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            width: 100vw !important;
+        }
+        html {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            width: 100vw !important;
+        }
+        
+        /* FORÇAR QUE NÃO TENHA SCROLL HORIZONTAL NO BODY */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body, html, main, div {
+            overflow-x: hidden !important;
+        }
+        
+        /* EXCEÇÃO PARA A TABELA - APENAS ELA PODE TER SCROLL HORIZONTAL */
+        div[style*="overflow-x: auto"] {
+            overflow-x: auto !important;
+        }
         .card-shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); }
         
         /* Remove outline padrão dos inputs */
@@ -33,6 +57,49 @@
 
         #publishButton:active {
             transform: scale(0.98);
+        }
+
+        /* Modal Styles */
+        .modal {
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Table scroll fix - SOLUÇÃO DEFINITIVA */
+        .overflow-x-auto {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e0 #f7fafc;
+        }
+        
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: #f7fafc;
+            border-radius: 4px;
+        }
+        
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 4px;
+        }
+        
+        .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+        
+        /* Garantir que o body não tenha scroll horizontal */
+        body, html {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+        }
+        
+        /* Garantir que o main não cause overflow */
+        main {
+            overflow-x: hidden !important;
+            max-width: 100% !important;
         }
     </style>
 </head>
@@ -147,7 +214,7 @@
             </header>
 
             <!-- Page Content -->
-            <main class="flex-1 p-4 lg:p-8 overflow-y-auto">
+            <main class="flex-1 p-4 lg:p-8 overflow-y-auto overflow-x-hidden max-w-full">
                 @if(session('success'))
                     <div class="mb-4 bg-green-50 border border-green-200 rounded-2xl p-4 flex items-start space-x-3">
                         <i class="ri-check-circle-line text-green-600 text-xl mt-0.5"></i>
@@ -270,6 +337,112 @@
                 }
             });
         });
+
+        // Global Modal Functions
+        function openConfirmationModal(title, message, confirmText, confirmAction) {
+            const modal = document.getElementById('globalConfirmationModal');
+            const modalTitle = modal.querySelector('#modalTitle');
+            const modalMessage = modal.querySelector('#modalMessage');
+            const confirmButton = modal.querySelector('#confirmButton');
+            
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            confirmButton.textContent = confirmText;
+            
+            // Store the action to execute
+            confirmButton.onclick = function() {
+                if (confirmAction) confirmAction();
+                closeConfirmationModal();
+            };
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeConfirmationModal() {
+            document.getElementById('globalConfirmationModal').classList.add('hidden');
+        }
+
+        function openSuccessModal(title, message) {
+            const modal = document.getElementById('globalSuccessModal');
+            const modalTitle = modal.querySelector('#successModalTitle');
+            const modalMessage = modal.querySelector('#successModalMessage');
+            
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('globalSuccessModal').classList.add('hidden');
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(event) {
+            if (event.target.id === 'globalConfirmationModal') {
+                closeConfirmationModal();
+            }
+            if (event.target.id === 'globalSuccessModal') {
+                closeSuccessModal();
+            }
+        });
+
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeConfirmationModal();
+                closeSuccessModal();
+            }
+        });
     </script>
+
+    <!-- Global Confirmation Modal -->
+    <div id="globalConfirmationModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4 modal">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <i class="ri-alert-line text-red-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 id="modalTitle" class="text-lg font-semibold text-gray-900">Confirmar Ação</h3>
+                        <p class="text-sm text-gray-600">Esta ação não pode ser desfeita</p>
+                    </div>
+                </div>
+                <p id="modalMessage" class="text-gray-700 mb-6">Tem certeza que deseja realizar esta ação?</p>
+                <div class="flex space-x-3">
+                    <button onclick="closeConfirmationModal()" class="flex-1 inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 text-sm">
+                        Cancelar
+                    </button>
+                    <button id="confirmButton" class="flex-1 inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-red-600 text-white hover:bg-red-700 px-4 py-2 text-sm">
+                        <i class="ri-delete-bin-line mr-2"></i>Confirmar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Success Modal -->
+    <div id="globalSuccessModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4 modal">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="ri-check-line text-green-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 id="successModalTitle" class="text-lg font-semibold text-gray-900">Sucesso!</h3>
+                        <p class="text-sm text-gray-600">Operação realizada com sucesso</p>
+                    </div>
+                </div>
+                <p id="successModalMessage" class="text-gray-700 mb-6">A ação foi executada com sucesso.</p>
+                <div class="flex justify-end">
+                    <button onclick="closeSuccessModal()" class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-green-600 text-white hover:bg-green-700 px-6 py-2 text-sm">
+                        <i class="ri-check-line mr-2"></i>Entendi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

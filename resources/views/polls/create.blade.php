@@ -4,6 +4,15 @@
 @section('page-title', 'Criar Enquete')
 
 @section('content')
+    <!-- Breadcrumb -->
+    <x-breadcrumb :items="[
+        ['label' => 'Dashboard', 'url' => route('dashboard')],
+        ['label' => 'Grupos', 'url' => route('groups.index')],
+        ['label' => $group->name, 'url' => route('groups.show', $group)],
+        ['label' => 'Enquetes', 'url' => route('polls.index', $group)],
+        ['label' => 'Criar Enquete', 'url' => '#']
+    ]" />
+
     <!-- Header Section -->
     <div class="mb-6 lg:mb-8">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">

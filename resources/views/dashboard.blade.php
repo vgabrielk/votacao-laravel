@@ -12,48 +12,30 @@
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <!-- Total Friends Card -->
-        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-blue-100 text-sm">Total de Amigos</p>
-                    <p class="text-2xl font-bold">{{ $user->friends->count() }}</p>
-                </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
-                    <i class="ri-user-line text-xl"></i>
-                </div>
-            </div>
-        </div>
+        <x-stats-card 
+            title="Total de Amigos" 
+            :value="$user->friends->count()" 
+            icon="ri-user-line" 
+            gradient="from-blue-500 to-blue-600" 
+            text-color="text-blue-100" 
+        />
 
-        <!-- Pending Requests Card -->
-        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-2xl p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-yellow-100 text-sm">Solicitações Pendentes</p>
-                    <p class="text-2xl font-bold">{{ $user->friendRequests->count() }}</p>
-                </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
-                    <i class="ri-user-add-line text-xl"></i>
-                </div>
-            </div>
-            <div class="flex items-center mt-2">
-                <i class="ri-time-line text-yellow-300 mr-1"></i>
-                <span class="text-yellow-300 text-sm">Aguardando aprovação</span>
-            </div>
-        </div>
+        <x-stats-card 
+            title="Solicitações Pendentes" 
+            :value="$user->friendRequests->count()" 
+            icon="ri-user-add-line" 
+            gradient="from-yellow-500 to-yellow-600" 
+            text-color="text-yellow-100" 
+            description="Aguardando aprovação"
+        />
 
-        <!-- Groups Card -->
-        <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-purple-100 text-sm">Grupos Ativos</p>
-                    <p class="text-2xl font-bold">{{ $user->groups->count() }}</p>
-                </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
-                    <i class="ri-group-line text-xl"></i>
-                </div>
-            </div>
-        </div>
+        <x-stats-card 
+            title="Grupos Ativos" 
+            :value="$user->groups->count()" 
+            icon="ri-group-line" 
+            gradient="from-purple-500 to-purple-600" 
+            text-color="text-purple-100" 
+        />
     </div>
 
     <!-- Main Content Grid -->
@@ -67,9 +49,7 @@
                 </div>
 
                 <div class="flex items-center space-x-4 mb-6">
-                    <div class="w-16 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span class="text-white font-bold text-xl">{{ substr($user->name, 0, 1) }}</span>
-                    </div>
+                
                     <div class="flex-1 min-w-0">
                         <h3 class="text-lg font-semibold text-gray-900 truncate">{{ $user->name }}</h3>
                         <p class="text-base text-gray-600 truncate">{{ $user->email }}</p>
@@ -97,19 +77,19 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Ações Rápidas</h3>
                 <div class="space-y-3">
-                    <a href="{{ route('friends.create') }}" class="flex items-center space-x-3 p-3 rounded-2xl hover:bg-gray-50 transition-colors">
+                    <a href="{{ route('friends.create') }}" class="flex items-center space-x-3 py-3 rounded-2xl hover:bg-gray-50 transition-colors">
                         <div class="w-8 bg-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0">
                             <i class="ri-user-add-line text-blue-600"></i>
                         </div>
                         <span class="text-base text-gray-700">Adicionar Amigo</span>
                     </a>
-                    <a href="{{ route('groups.create') }}" class="flex items-center space-x-3 p-3 rounded-2xl hover:bg-gray-50 transition-colors">
+                    <a href="{{ route('groups.create') }}" class="flex items-center space-x-3 py-3 rounded-2xl hover:bg-gray-50 transition-colors">
                         <div class="w-8 bg-purple-100 rounded-2xl flex items-center justify-center flex-shrink-0">
                             <i class="ri-group-line text-purple-600"></i>
                         </div>
                         <span class="text-base text-gray-700">Criar Grupo</span>
                     </a>
-                    <a href="{{ route('friends.index') }}" class="flex items-center space-x-3 p-3 rounded-2xl hover:bg-gray-50 transition-colors">
+                    <a href="{{ route('friends.index') }}" class="flex items-center space-x-3 py-3 rounded-2xl hover:bg-gray-50 transition-colors">
                         <div class="w-8 bg-green-100 rounded-2xl flex items-center justify-center flex-shrink-0">
                             <i class="ri-user-line text-green-600"></i>
                         </div>

@@ -4,6 +4,15 @@
 @section('page-title', 'Enquete')
 
 @section('content')
+    <!-- Breadcrumb -->
+    <x-breadcrumb :items="[
+        ['label' => 'Dashboard', 'url' => route('dashboard')],
+        ['label' => 'Grupos', 'url' => route('groups.index')],
+        ['label' => $group->name, 'url' => route('groups.show', $group)],
+        ['label' => 'Enquetes', 'url' => route('polls.index', $group)],
+        ['label' => $poll->title ?? 'Enquete', 'url' => '#']
+    ]" />
+
     <!-- Header Section -->
     <div class="mb-6 lg:mb-8">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
@@ -37,7 +46,7 @@
                     <p class="text-blue-100 text-sm">Total de Votos</p>
                     <p class="text-2xl font-bold">0</p>
                 </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-user-line text-xl"></i>
                 </div>
             </div>
@@ -49,7 +58,7 @@
                     <p class="text-green-100 text-sm">Status</p>
                     <p class="text-lg font-semibold">Ativa</p>
                 </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-time-line text-xl"></i>
                 </div>
             </div>
@@ -61,7 +70,7 @@
                     <p class="text-purple-100 text-sm">Criada em</p>
                     <p class="text-lg font-semibold">{{ date('d/m/Y') }}</p>
                 </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-calendar-line text-xl"></i>
                 </div>
             </div>
@@ -264,9 +273,9 @@
                     <form action="{{ route('polls.destroy', [$group, $poll->id]) }}" method="POST" class="sm:col-span-2">
                         @csrf
                         @method('DELETE')
-                        <button type="submit"
+                        <button type="button"
                             class="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-red-50 transition-colors text-red-600"
-                            onclick="return confirm('Tem certeza que deseja deletar esta enquete?')">
+                            onclick="confirmDeletePoll('{{ $poll->id }}', '{{ $poll->title }}')">
                             <div class="w-8 bg-red-100 rounded-lg flex items-center justify-center">
                                 <i class="ri-delete-bin-line w-4 text-red-600"></i>
                             </div>
@@ -368,6 +377,35 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
         });
     }
-});
-</script>
+        });
+
+        function confirmDeletePoll(pollId, pollTitle) {
+            openConfirmationModal(
+                'Deletar Enquete',
+                `Tem certeza que deseja deletar a enquete "${pollTitle}"? Esta ação é permanente e não pode ser desfeita.`,
+                'Deletar',
+                function() {
+                    // Create and submit form
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/groups/{{ $group->id }}/polls/${pollId}`;
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    
+                    const methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    methodField.value = 'DELETE';
+                    
+                    form.appendChild(csrfToken);
+                    form.appendChild(methodField);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            );
+        }
+    </script>
 @endsection

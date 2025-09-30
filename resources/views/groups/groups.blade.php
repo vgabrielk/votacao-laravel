@@ -11,112 +11,89 @@
             <p class="text-gray-600 mt-2">Gerencie seus grupos e participe de comunidades</p>
         </div>
         <div class="mt-4 lg:mt-0">
-            <a href="{{ route('groups.create') }}" class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-purple-600 text-white hover:bg-purple-700 px-6 py-3 text-sm w-full sm:w-auto">
-                <i class="ri-add-line mr-2"></i>
+            <x-button href="{{ route('groups.create') }}" variant="primary" size="lg" icon="ri-add-line">
                 Criar Novo Grupo
-            </a>
+            </x-button>
         </div>
     </div>
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-blue-100 text-sm">Total de Grupos</p>
-                    <p class="text-2xl font-bold">{{ $groups->count() }}</p>
-                </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
-                    <i class="ri-group-line text-xl"></i>
-                </div>
-            </div>
-        </div>
+        <x-stats-card 
+            title="Total de Grupos" 
+            :value="$groups->count()" 
+            icon="ri-group-line" 
+            gradient="from-blue-500 to-blue-600" 
+            text-color="text-blue-100" 
+        />
         
-        <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-green-100 text-sm">Membros Totais</p>
-                    <p class="text-2xl font-bold">{{ $groups->sum('members_count') ?? 0 }}</p>
-                </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
-                    <i class="ri-user-line text-xl"></i>
-                </div>
-            </div>
-        </div>
+        <x-stats-card 
+            title="Membros Totais" 
+            :value="$groups->sum('members_count') ?? 0" 
+            icon="ri-user-line" 
+            gradient="from-green-500 to-green-600" 
+            text-color="text-green-100" 
+        />
         
-        <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-purple-100 text-sm">Grupos Criados</p>
-                    <p class="text-2xl font-bold">{{ $groups->where('creator_id', Auth::id())->count() }}</p>
-                </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
-                    <i class="ri-crown-line text-xl"></i>
-                </div>
-            </div>
-        </div>
+        <x-stats-card 
+            title="Grupos Criados" 
+            :value="$groups->where('creator_id', Auth::id())->count()" 
+            icon="ri-crown-line" 
+            gradient="from-purple-500 to-purple-600" 
+            text-color="text-purple-100" 
+        />
     </div>
 
-    <!-- Groups List -->
+    <!-- Groups Table -->
     @if($groups->count() > 0)
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold text-gray-900 mb-6">Todos os Grupos</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach ($groups as $group)
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex-1 min-w-0">
-                        <h3 class="text-lg font-semibold text-gray-900 truncate mb-2">{{ $group->name }}</h3>
-                        <p class="text-sm text-gray-600 truncate">{{ $group->description }}</p>
-                    </div>
-                    <div class="flex items-center space-x-2 ml-3">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
-                            @if($group->visibility === 'public') bg-green-100 text-green-800
-                            @else bg-gray-100 text-gray-800 @endif">
-                            <div class="w-2 h-2 rounded-full mr-2
-                                @if($group->visibility === 'public') bg-green-500
-                                @else bg-gray-500 @endif"></div>
-                            {{ ucfirst($group->visibility) }}
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="space-y-3 mb-6">
-                    <div class="flex items-center text-sm text-gray-600">
-                        <i class="ri-user-line mr-2"></i>
-                        <span class="truncate">Criado por: <strong>{{ $group->creator->name }}</strong></span>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-600">
-                        <i class="ri-calendar-line mr-2"></i>
-                        <span>Criado em: {{ $group->created_at->format('d/m/Y') }}</span>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-600">
-                        <i class="ri-group-line mr-2"></i>
-                        <span>{{ $group->members()->count() }} membros</span>
-                    </div>
-                </div>
-
-                <div class="flex space-x-2">
-                    <a href="{{ route('groups.show', $group) }}" class="flex-1 inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 text-sm">
-                        <i class="ri-eye-line mr-2"></i>
-                        Ver Grupo
-                    </a>
-                    @if($group->creator_id === Auth::id())
-                    <form action="{{ route('groups.destroy', $group) }}" method="POST" class="flex-1">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer bg-red-600 text-white hover:bg-red-700 px-4 py-2 text-sm" 
-                                onclick="return confirm('Tem certeza que deseja deletar este grupo?')">
-                            <i class="ri-delete-bin-line mr-2"></i>
-                            Deletar
-                        </button>
-                    </form>
-                    @endif
-                </div>
-            </div>
-            @endforeach
+    <x-card>
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-900">Todos os Grupos</h2>
         </div>
-    </div>
+        
+        <!-- Table with horizontal scroll container - SOLUÇÃO DEFINITIVA -->
+        <div style="overflow-x: auto; width: 100%; max-width: 100%;">
+            <table style="width: 100%; min-width: 1000px; border-collapse: collapse;">
+                <thead style="background-color: #f9fafb;">
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <th style="text-align: left; padding: 16px 24px; font-weight: 500; color: #374151; white-space: nowrap; min-width: 200px;">
+                            <button style="display: flex; align-items: center; gap: 4px; cursor: pointer; background: none; border: none;">
+                                <span>Grupo</span>
+                                <i class="ri-arrow-up-down-line" style="font-size: 12px;"></i>
+                            </button>
+                        </th>
+                        <th style="text-align: left; padding: 16px 24px; font-weight: 500; color: #374151; white-space: nowrap; min-width: 150px;">Criador</th>
+                        <th style="text-align: left; padding: 16px 24px; font-weight: 500; color: #374151; white-space: nowrap; min-width: 80px;">Membros</th>
+                        <th style="text-align: left; padding: 16px 24px; font-weight: 500; color: #374151; white-space: nowrap; min-width: 120px;">Visibilidade</th>
+                        <th style="text-align: left; padding: 16px 24px; font-weight: 500; color: #374151; white-space: nowrap; min-width: 100px;">Criado em</th>
+                        <th style="text-align: left; padding: 16px 24px; font-weight: 500; color: #374151; white-space: nowrap; min-width: 100px;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($groups as $group)
+                        <tr style="border-bottom: 1px solid #f3f4f6; transition: background-color 0.2s; cursor: pointer;" 
+                            onmouseover="this.style.backgroundColor='#f9fafb'" 
+                            onmouseout="this.style.backgroundColor='transparent'"
+                            onclick="window.location.href='{{ route('groups.show', $group) }}'">
+                            <td style="padding: 16px 24px; white-space: nowrap;">
+                                <span class="text-gray-900 font-medium">{{ $group->name }}</span>
+                            </td>
+                            <td style="padding: 16px 24px; white-space: nowrap;">{{ $group->creator->name }}</td>
+                            <td style="padding: 16px 24px; white-space: nowrap;">{{ $group->members()->count() }}</td>
+                            <td style="padding: 16px 24px; white-space: nowrap;"><x-status-badge :status="$group->visibility" /></td>
+                            <td style="padding: 16px 24px; white-space: nowrap;">{{ $group->created_at->format('d/m/Y') }}</td>
+                            <td style="padding: 16px 24px; white-space: nowrap;">
+                                <x-button href="{{ route('groups.show', $group) }}" variant="primary" size="sm" icon="ri-eye-line" onclick="event.stopPropagation()">Ver</x-button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <x-pagination :paginator="$groups" />
+    </x-card>
     @endif
 
     <!-- Empty State -->
@@ -133,5 +110,36 @@
         </a>
     </div>
     @endif
-</div>
+    </div>
+
+    <script>
+        function confirmDeleteGroup(groupId, groupName) {
+            openConfirmationModal(
+                'Deletar Grupo',
+                `Tem certeza que deseja deletar o grupo "${groupName}"? Esta ação é permanente e não pode ser desfeita.`,
+                'Deletar',
+                function() {
+                    // Create and submit form
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/groups/${groupId}`;
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    
+                    const methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    methodField.value = 'DELETE';
+                    
+                    form.appendChild(csrfToken);
+                    form.appendChild(methodField);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            );
+        }
+    </script>
 @endsection

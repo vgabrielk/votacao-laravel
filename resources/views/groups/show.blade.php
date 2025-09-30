@@ -3,7 +3,18 @@
 @section('title', $group->name)
 @section('page-title', $group->name)
 
+@php
+    $firstName = explode(' ', $group->creator->name)[0];
+    $shortName = strlen($firstName) > 5 ? substr($firstName, 0, 5) . '...' : $firstName;
+@endphp
 @section('content')
+    <!-- Breadcrumb -->
+    <x-breadcrumb :items="[
+        ['label' => 'Dashboard', 'url' => route('dashboard')],
+        ['label' => 'Grupos', 'url' => route('groups.index')],
+        ['label' => $group->name, 'url' => '#']
+    ]" />
+
     <!-- Header Section -->
     <div class="mb-6 lg:mb-8">
         <div class="flex items-center gap-4">
@@ -23,7 +34,7 @@
                     <p class="text-blue-100 text-sm">Total de Membros</p>
                     <p class="text-xl lg:text-2xl font-bold">{{ $group->members->count() }}</p>
                 </div>
-                <div class="w-10 lg:w-12 lg:h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-group-line text-lg lg:text-xl"></i>
                 </div>
             </div>
@@ -33,9 +44,9 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-green-100 text-sm">Criado por</p>
-                    <p class="text-base lg:text-lg font-semibold truncate">{{ $group->creator->name }}</p>
+                    <p class="text-base lg:text-lg font-semibold truncate">{{ $shortName }}</p>
                 </div>
-                <div class="w-10 lg:w-12 lg:h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-user-line text-lg lg:text-xl"></i>
                 </div>
             </div>
@@ -47,7 +58,7 @@
                     <p class="text-purple-100 text-sm">Visibilidade</p>
                     <p class="text-base lg:text-lg font-semibold capitalize">{{ $group->visibility }}</p>
                 </div>
-                <div class="w-10 lg:w-12 lg:h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-eye-line text-lg lg:text-xl"></i>
                 </div>
             </div>
@@ -77,7 +88,7 @@
                 </div>
                 <div class="flex items-center text-sm text-gray-600">
                     <i class="ri-user-line mr-3 flex-shrink-0"></i>
-                    <span>Criado por: <strong>{{ $group->creator->name }}</strong></span>
+                    <span>Criado por: <strong>{{ strlen(explode(' ', $group->creator->name)[0]) > 4 ? substr(explode(' ', $group->creator->name)[0], 0, 4) . '...' : explode(' ', $group->creator->name)[0] }}</strong></span>
                 </div>
                 <div class="flex items-center text-sm text-gray-600">
                     <i class="ri-group-line mr-3 flex-shrink-0"></i>
@@ -201,10 +212,10 @@
                             <form action="{{ route('groups.create', [$group->id, $member->id]) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit"
+                                <button type="button"
                                         class="text-red-500 hover:text-red-700 transition-colors p-2 rounded-lg hover:bg-red-50"
-                                        onclick="return confirm('Tem certeza que deseja remover este membro?')">
-                                    <i data-lucide="user-minus" class="w-4"></i>
+                                        onclick="confirmRemoveMember('{{ $member->id }}', '{{ $member->name }}')">
+                                    <i class="ri-user-unfollow-line w-4"></i>
                                 </button>
                             </form>
                         </div>
@@ -222,5 +233,36 @@
         </div>
 
     </div>
-</div>
+    </div>
+
+    <script>
+        function confirmRemoveMember(memberId, memberName) {
+            openConfirmationModal(
+                'Remover Membro',
+                `Tem certeza que deseja remover ${memberName} do grupo?`,
+                'Remover',
+                function() {
+                    // Create and submit form
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/groups/{{ $group->id }}/members/${memberId}`;
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    
+                    const methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    methodField.value = 'DELETE';
+                    
+                    form.appendChild(csrfToken);
+                    form.appendChild(methodField);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            );
+        }
+    </script>
 @endsection

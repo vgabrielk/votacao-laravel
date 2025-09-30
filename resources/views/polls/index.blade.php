@@ -4,6 +4,14 @@
 @section('page-title', 'Enquetes do Grupo')
 
 @section('content')
+    <!-- Breadcrumb -->
+    <x-breadcrumb :items="[
+        ['label' => 'Dashboard', 'url' => route('dashboard')],
+        ['label' => 'Grupos', 'url' => route('groups.index')],
+        ['label' => $group->name, 'url' => route('groups.show', $group)],
+        ['label' => 'Enquetes', 'url' => '#']
+    ]" />
+
     <!-- Header Section -->
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 lg:mb-8">
         <div class="mb-4 lg:mb-0">
@@ -31,7 +39,7 @@
                     <p class="text-blue-100 text-sm">Total de Enquetes</p>
                     <p class="text-2xl font-bold">{{ $polls->count() }}</p>
                 </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-bar-chart-line text-xl"></i>
                 </div>
             </div>
@@ -43,7 +51,7 @@
                     <p class="text-green-100 text-sm">Enquetes Ativas</p>
                     <p class="text-2xl font-bold">{{ $polls->where('status', 'open')->count() }}</p>
                 </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-check-circle-line text-xl"></i>
                 </div>
             </div>
@@ -55,7 +63,7 @@
                     <p class="text-purple-100 text-sm">Total de Votos</p>
                     <p class="text-2xl font-bold">0</p>
                 </div>
-                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-user-line text-xl"></i>
                 </div>
             </div>
@@ -133,16 +141,11 @@
                                     </form>
                                 @endif
                                 
-                                <form action="{{ route('polls.destroy', [$group, $poll->id]) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="inline-flex items-center px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
-                                            onclick="return confirm('Tem certeza que deseja deletar esta enquete?')">
-                                        <i class="ri-delete-bin-line w-4 mr-1"></i>
-                                        Deletar
-                                    </button>
-                                </form>
+                                <button onclick="confirmDeletePoll('{{ $poll->id }}', '{{ $poll->title }}')" 
+                                        class="inline-flex items-center px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm">
+                                    <i class="ri-delete-bin-line w-4 mr-1"></i>
+                                    Deletar
+                                </button>
                             @endif
                         </div>
                     </div>
@@ -200,5 +203,36 @@
             </div>
         </div>
     @endif
-</div>
+    </div>
+
+    <script>
+        function confirmDeletePoll(pollId, pollTitle) {
+            openConfirmationModal(
+                'Deletar Enquete',
+                `Tem certeza que deseja deletar a enquete "${pollTitle}"? Esta ação é permanente e não pode ser desfeita.`,
+                'Deletar',
+                function() {
+                    // Create and submit form
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/groups/{{ $group->id }}/polls/${pollId}`;
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    
+                    const methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    methodField.value = 'DELETE';
+                    
+                    form.appendChild(csrfToken);
+                    form.appendChild(methodField);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            );
+        }
+    </script>
 @endsection

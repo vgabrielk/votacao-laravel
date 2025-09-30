@@ -44,6 +44,7 @@ Route::middleware(['auth', 'user.status'])->group(function () {
     Route::get('/friends/add', [FriendsController::class, 'create'])->name('friends.create');
     Route::post('/friends/invite', [FriendsController::class, 'addFriend'])->name('friends.store');
     Route::delete('/friends/{pivot}/reject', [FriendsController::class, 'rejectFriend'])->name('friends.removeFriend');
+    Route::delete('/friends/{pivot}/delete', [FriendsController::class, 'deleteFriend'])->name('friends.deleteFriend');
     Route::post('/friends/{pivot}/accept', [FriendsController::class, 'acceptFriend'])->name('friends.acceptFriend');
 
 
