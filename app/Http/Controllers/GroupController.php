@@ -54,6 +54,9 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
+
+$group->load(['polls.creator', 'polls.options']);
+
         return view('groups.show', compact('group'));
     }
 
@@ -87,7 +90,7 @@ class GroupController extends Controller
     public function addMember(Request $request, Group $group)
     {
 
-        $this->authorize('canManageGroup', $group);
+        $this->authorize('canAddOtherUsers', $group);
 
         $result = $this->groupService->addMember($request->email, $group);
 

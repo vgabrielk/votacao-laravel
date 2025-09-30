@@ -7,21 +7,12 @@
 <div class="p-4 sm:p-6">
     <!-- Header Section -->
     <div class="mb-6 sm:mb-8">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div class="mb-4 sm:mb-0">
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ $group->name }}</h1>
-                <p class="text-gray-600 mt-1 text-sm sm:text-base">{{ $group->description }}</p>
-            </div>
-            <div class="flex flex-col sm:flex-row gap-3">
+        <div class="flex sm:flex-row gap-4">
+            <div class="flexsm:flex-row gap-3">
                 <a href="{{ route('groups.index') }}"
-                    class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                    class="flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                     <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
                     Voltar
-                </a>
-                <a href="{{ route('groups.create') }}"
-                    class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
-                    Criar Grupo
                 </a>
             </div>
         </div>
@@ -40,7 +31,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100">
             <div class="flex items-center">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
@@ -52,7 +43,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100 sm:col-span-2 lg:col-span-1">
             <div class="flex items-center">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
@@ -105,6 +96,63 @@
             @endif
         </div>
 
+                <!-- Polls Section -->
+        <div class="bg-white rounded-xl p-6 sm:p-8 card-shadow border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Enquetes do Grupo</h3>
+                <a href="{{ route('polls.index', $group) }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                    Ver todas
+                </a>
+            </div>
+
+            @if($group->polls->count() > 0)
+                <!-- Polls List -->
+                <div class="space-y-4">
+                    @foreach($group->polls->take(3) as $poll)
+                        <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-medium text-gray-900">{{ $poll->title }}</h4>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                    @if($poll->status === 'open') bg-green-100 text-green-800
+                                    @elseif($poll->status === 'closed') bg-red-100 text-red-800
+                                    @else bg-gray-100 text-gray-800 @endif">
+                                    @if($poll->status === 'open') Ativa
+                                    @elseif($poll->status === 'closed') Encerrada
+                                    @else Rascunho @endif
+                                </span>
+                            </div>
+                            @if($poll->description)
+                                <p class="text-xs text-gray-600 mb-2">{{ Str::limit($poll->description, 100) }}</p>
+                            @endif
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                    <span>Criada por {{ $poll->creator->name ?? 'Usuário' }}</span>
+                                    <span>{{ $poll->created_at->format('d/m/Y') }}</span>
+                                </div>
+                                <a href="{{ route('polls.show', [$group, $poll->id]) }}" 
+                                   class="text-blue-600 hover:text-blue-700 text-xs font-medium">
+                                    Ver enquete →
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <!-- Empty State for Polls -->
+                <div class="text-center py-8">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="bar-chart-3" class="w-8 h-8 text-gray-400"></i>
+                    </div>
+                    <p class="text-gray-500 mb-2">Nenhuma enquete ainda</p>
+                    <p class="text-sm text-gray-400 mb-4">Crie a primeira enquete para o grupo</p>
+                    <a href="{{ route('polls.create', $group) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                        <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                        Criar Enquete
+                    </a>
+                </div>
+            @endif
+        </div>
+
         <!-- Add Members Section -->
         <div class="bg-white rounded-xl p-6 sm:p-8 card-shadow border border-gray-100">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Adicionar Membros</h3>
@@ -114,9 +162,9 @@
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                         E-mail do usuário <span class="text-red-500">*</span>
                     </label>
-                    <input id="email" 
-                           name="email" 
-                           type="email" 
+                    <input id="email"
+                           name="email"
+                           type="email"
                            required
                            value="{{ old('email') }}"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none @error('email') border-red-300 focus:ring-red-500 focus:border-red-500 @enderror"
@@ -156,7 +204,7 @@
                             <form action="{{ route('groups.create', [$group->id, $member->id]) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" 
+                                <button type="submit"
                                         class="text-red-500 hover:text-red-700 transition-colors p-2 rounded-lg hover:bg-red-50"
                                         onclick="return confirm('Tem certeza que deseja remover este membro?')">
                                     <i data-lucide="user-minus" class="w-4 h-4"></i>
@@ -176,38 +224,6 @@
             @endif
         </div>
 
-        <!-- Group Actions -->
-        <div class="bg-white rounded-xl p-6 sm:p-8 card-shadow border border-gray-100">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ações do Grupo</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <button class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <i data-lucide="message-circle" class="w-4 h-4 text-blue-600"></i>
-                    </div>
-                    <span class="text-gray-700">Enviar Mensagem</span>
-                </button>
-                <button class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                        <i data-lucide="settings" class="w-4 h-4 text-green-600"></i>
-                    </div>
-                    <span class="text-gray-700">Configurações</span>
-                </button>
-                @if ($group->creator_id === Auth::id())
-                    <form action="{{ route('groups.destroy', $group) }}" method="POST" class="sm:col-span-2">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-red-50 transition-colors text-red-600"
-                            onclick="return confirm('Tem certeza que deseja deletar este grupo?')">
-                            <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                                <i data-lucide="trash-2" class="w-4 h-4 text-red-600"></i>
-                            </div>
-                            <span>Deletar Grupo</span>
-                        </button>
-                    </form>
-                @endif
-            </div>
-        </div>
     </div>
 </div>
 @endsection

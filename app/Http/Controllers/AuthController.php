@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Mail\WelcomeMail;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
+use Illuminate\Support\Facades\Mail;
+
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -74,6 +80,9 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'status' => 'active',
         ]);
+
+
+        Mail::to($user->email)->send(new WelcomeMail($user));
 
         Auth::login($user);
 

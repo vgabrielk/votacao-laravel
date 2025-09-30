@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FriendsController;
 use App\Http\Controllers\GroupController;
+
+use App\Http\Controllers\PollController;
+
 use Illuminate\Support\Facades\Auth;
 
 // Rotas públicas
@@ -42,4 +45,14 @@ Route::middleware(['auth', 'user.status'])->group(function () {
     Route::delete('/friends/{pivot}/reject', [FriendsController::class, 'rejectFriend'])->name('friends.removeFriend');
     Route::post('/friends/{pivot}/accept', [FriendsController::class, 'acceptFriend'])->name('friends.acceptFriend');
 
+
+    // Rotas de Enquetes (apenas dentro de grupos)
+    Route::get('/groups/{group}/polls', [PollController::class, 'index'])->name('polls.index');
+    Route::get('/groups/{group}/polls/create', [PollController::class, 'create'])->name('polls.create');
+    Route::post('/groups/{group}/polls', [PollController::class, 'store'])->name('polls.store');
+    Route::get('/groups/{group}/polls/{poll}', [PollController::class, 'show'])->name('polls.show');
+    Route::post('/groups/{group}/polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
+    Route::post('/groups/{group}/polls/{poll}/publish', [PollController::class, 'publish'])->name('polls.publish');
+    Route::post('/groups/{group}/polls/{poll}/close', [PollController::class, 'close'])->name('polls.close');
+    Route::delete('/groups/{group}/polls/{poll}', [PollController::class, 'destroy'])->name('polls.destroy');
 });

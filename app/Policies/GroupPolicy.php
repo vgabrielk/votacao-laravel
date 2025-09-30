@@ -8,7 +8,7 @@ use Illuminate\Auth\Access\Response;
 
 class GroupPolicy
 {
-    public function canManageGroup(User $user, Group $group): bool
+    public function canAddOtherUsers(User $user, Group $group): bool
     {
         return $group->creator_id === $user->id;
     }

@@ -26,4 +26,8 @@ class Group extends Model
         return $this->belongsToMany(User::class, 'group_members', 'group_id', 'user_id')
                     ->withTimestamps();
     }
+
+    public function polls(){
+        return $this->hasMany(Poll::class);
+    }
 }

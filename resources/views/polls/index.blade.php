@@ -1,0 +1,205 @@
+@extends('layouts.app')
+
+@section('title', 'Enquetes do Grupo')
+@section('page-title', 'Enquetes do Grupo')
+
+@section('content')
+<div class="p-4 sm:p-6">
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
+        <div class="mb-4 sm:mb-0">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Enquetes do Grupo</h1>
+            <p class="text-gray-600 mt-1 text-sm sm:text-base">Enquetes do grupo <strong>{{ $group->name }}</strong></p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3">
+            <a href="{{ route('groups.show', $group) }}"
+                class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
+                Voltar ao Grupo
+            </a>
+            <a href="{{ route('polls.create', $group) }}" class="inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base w-full sm:w-auto">
+                <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                Criar Nova Enquete
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100">
+            <div class="flex items-center">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5 sm:w-6 sm:h-6 text-blue-600"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs sm:text-sm text-gray-600">Total de Enquetes</p>
+                    <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ $polls->count() }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100">
+            <div class="flex items-center">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <i data-lucide="check-circle" class="w-5 h-5 sm:w-6 sm:h-6 text-green-600"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs sm:text-sm text-gray-600">Enquetes Ativas</p>
+                    <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ $polls->where('status', 'open')->count() }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100 sm:col-span-2 lg:col-span-1">
+            <div class="flex items-center">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <i data-lucide="users" class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs sm:text-sm text-gray-600">Total de Votos</p>
+                    <p class="text-xl sm:text-2xl font-bold text-gray-900">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @php
+        $polls = $result->data['polls'] ?? collect();
+    @endphp
+    
+    @if($polls->count() > 0)
+        <!-- Polls List -->
+        <div class="space-y-4 sm:space-y-6">
+            @foreach($polls as $poll)
+                <div class="bg-white rounded-xl p-6 sm:p-8 card-shadow border border-gray-100 hover:shadow-lg transition-shadow">
+                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4">
+                        <div class="flex-1 mb-4 sm:mb-0">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">{{ $poll->title }}</h3>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                    @if($poll->status === 'open') bg-green-100 text-green-800
+                                    @elseif($poll->status === 'closed') bg-red-100 text-red-800
+                                    @else bg-gray-100 text-gray-800 @endif">
+                                    @if($poll->status === 'open') Ativa
+                                    @elseif($poll->status === 'closed') Encerrada
+                                    @else Rascunho @endif
+                                </span>
+                            </div>
+                            @if($poll->description)
+                                <p class="text-gray-600 text-sm sm:text-base mb-3">{{ $poll->description }}</p>
+                            @endif
+                            <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-gray-500">
+                                <div class="flex items-center">
+                                    <i data-lucide="user" class="w-4 h-4 mr-1"></i>
+                                    <span>Criada por {{ $poll->creator->name ?? 'Usuário' }}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i data-lucide="calendar" class="w-4 h-4 mr-1"></i>
+                                    <span>{{ $poll->created_at->format('d/m/Y H:i') }}</span>
+                                </div>
+                                @if($poll->end_at)
+                                    <div class="flex items-center">
+                                        <i data-lucide="clock" class="w-4 h-4 mr-1"></i>
+                                        <span>Encerra em {{ $poll->end_at->format('d/m/Y H:i') }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <a href="{{ route('polls.show', [$group, $poll->id]) }}" 
+                               class="inline-flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                <i data-lucide="eye" class="w-4 h-4 mr-1"></i>
+                                Ver Enquete
+                            </a>
+                            
+                            @if($poll->creator_id === Auth::id())
+                                @if($poll->status === 'draft')
+                                    <form action="{{ route('polls.publish', [$group, $poll->id]) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" 
+                                                class="inline-flex items-center px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+                                            <i data-lucide="send" class="w-4 h-4 mr-1"></i>
+                                            Publicar
+                                        </button>
+                                    </form>
+                                @elseif($poll->status === 'open')
+                                    <form action="{{ route('polls.close', [$group, $poll->id]) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" 
+                                                class="inline-flex items-center px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm"
+                                                onclick="return confirm('Tem certeza que deseja encerrar esta enquete?')">
+                                            <i data-lucide="lock" class="w-4 h-4 mr-1"></i>
+                                            Encerrar
+                                        </button>
+                                    </form>
+                                @endif
+                                
+                                <form action="{{ route('polls.destroy', [$group, $poll->id]) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            class="inline-flex items-center px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
+                                            onclick="return confirm('Tem certeza que deseja deletar esta enquete?')">
+                                        <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>
+                                        Deletar
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Poll Options Preview -->
+                    <div class="mt-4">
+                        <h4 class="text-sm font-medium text-gray-700 mb-3">Opções de Resposta:</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            @foreach($poll->options as $option)
+                                <div class="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg">
+                                    <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                    <span class="text-sm text-gray-700">{{ $option->text }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Poll Settings -->
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        @if($poll->type === 'private')
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-orange-100 text-orange-800">
+                                <i data-lucide="lock" class="w-3 h-3 mr-1"></i>
+                                Privada
+                            </span>
+                        @endif
+                        @if($poll->anonymus)
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800">
+                                <i data-lucide="eye-off" class="w-3 h-3 mr-1"></i>
+                                Anônima
+                            </span>
+                        @endif
+                        @if($poll->allow_multiple)
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                                <i data-lucide="check-square" class="w-3 h-3 mr-1"></i>
+                                Múltipla Escolha
+                            </span>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @else
+        <!-- Empty State -->
+        <div class="bg-white rounded-xl p-8 sm:p-12 card-shadow border border-gray-100">
+            <div class="text-center">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="bar-chart-3" class="w-8 h-8 sm:w-10 sm:h-10 text-gray-400"></i>
+                </div>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Nenhuma enquete ainda</h3>
+                <p class="text-sm sm:text-base text-gray-600 mb-6">Crie a primeira enquete para o grupo</p>
+                <a href="{{ route('polls.create', $group) }}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                    Criar Enquete
+                </a>
+            </div>
+        </div>
+    @endif
+</div>
+@endsection
