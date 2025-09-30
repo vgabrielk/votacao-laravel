@@ -4,55 +4,55 @@
 @section('page-title', 'Criar Enquete')
 
 @section('content')
-    <div class="p-4 sm:p-6">
-        <!-- Header Section -->
-        <div class="mb-6 sm:mb-8">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <div class="mb-4 sm:mb-0">
-                    <p class="text-gray-600 mt-1 text-sm sm:text-base">Crie uma enquete interativa para o grupo
-                        <strong>{{ $group->name }}</strong>
-                    </p>
-                </div>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <a href="{{ route('polls.index', $group) }}"
-                        class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                        <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
-                        Voltar ao Grupo
-                    </a>
-                </div>
+    <!-- Header Section -->
+    <div class="mb-6 lg:mb-8">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div class="mb-4 lg:mb-0">
+                <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">Criar Nova Enquete</h1>
+                <p class="text-gray-600 mt-2">Crie uma enquete interativa para o grupo
+                    <strong>{{ $group->name }}</strong>
+                </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a href="{{ route('polls.index', $group) }}"
+                    class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 text-sm">
+                    <i class="ri-arrow-left-line mr-2"></i>
+                    Voltar ao Grupo
+                </a>
             </div>
         </div>
+    </div>
 
-        <!-- Form Card -->
-        <div class="bg-white rounded-xl p-6 sm:p-8 card-shadow border border-gray-100">
-            <form method="POST" action="{{ route('polls.store', $group) }}" class="space-y-6" id="pollForm">
-                @csrf
+    <!-- Form Card -->
+    <div class="bg-white rounded-2xl p-4 lg:p-8 shadow-sm border border-gray-100">
+        <form method="POST" action="{{ route('polls.store', $group) }}" class="space-y-6" id="pollForm">
+            @csrf
 
-                <!-- Título da Enquete -->
-                <div>
-                    <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-                        Título da Enquete <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="title" id="title" value="{{ old('title') }}"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none @error('title') border-red-300 focus:ring-red-500 focus:border-red-500 @enderror"
-                        placeholder="Ex: Qual sua linguagem de programação favorita?" required>
-                    @error('title')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
+            <!-- Título da Enquete -->
+            <div>
+                <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                    Título da Enquete <span class="text-red-500">*</span>
+                </label>
+                <input type="text" name="title" id="title" value="{{ old('title') }}"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors @error('title') border-red-300 focus:ring-red-500 focus:border-red-500 @enderror"
+                    placeholder="Ex: Qual sua linguagem de programação favorita?" required>
+                @error('title')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-                <!-- Descrição -->
-                <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                        Descrição (Opcional)
-                    </label>
-                    <textarea name="description" id="description" rows="3"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none @error('description') border-red-300 focus:ring-red-500 focus:border-red-500 @enderror"
-                        placeholder="Adicione uma descrição para sua enquete...">{{ old('description') }}</textarea>
-                    @error('description')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
+            <!-- Descrição -->
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                    Descrição (Opcional)
+                </label>
+                <textarea name="description" id="description" rows="3"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors resize-none @error('description') border-red-300 focus:ring-red-500 focus:border-red-500 @enderror"
+                    placeholder="Adicione uma descrição para sua enquete...">{{ old('description') }}</textarea>
+                @error('description')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
                 <!-- Opções de Resposta -->
                 <div>
@@ -64,13 +64,13 @@
                         <div class="flex items-center space-x-3 option-item">
                             <div class="flex-1">
                                 <input type="text" name="options[]"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                                     placeholder="Digite uma opção de resposta..." required>
                             </div>
                             <button type="button"
-                                class="remove-option text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors"
+                                class="remove-option text-red-500 hover:text-red-700 p-2 rounded-2xl hover:bg-red-50 transition-colors"
                                 style="display: none;">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                <i class="ri-delete-bin-line w-4"></i>
                             </button>
                         </div>
 
@@ -78,20 +78,20 @@
                         <div class="flex items-center space-x-3 option-item">
                             <div class="flex-1">
                                 <input type="text" name="options[]"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                                     placeholder="Digite uma opção de resposta..." required>
                             </div>
                             <button type="button"
-                                class="remove-option text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors"
+                                class="remove-option text-red-500 hover:text-red-700 p-2 rounded-2xl hover:bg-red-50 transition-colors"
                                 style="display: none;">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                <i class="ri-delete-bin-line w-4"></i>
                             </button>
                         </div>
                     </div>
 
                     <button type="button" id="addOption"
-                        class="mt-3 inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                        <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                        class="mt-3 inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 text-sm">
+                        <i class="ri-add-line mr-2"></i>
                         Adicionar Opção
                     </button>
                 </div>
@@ -104,21 +104,21 @@
                             Tipo de Enquete
                         </label>
                         <div class="space-y-3">
-                            <label class="flex items-center">
+                            <label class="flex items-center cursor-pointer">
                                 <input type="radio" name="type" value="public"
                                     {{ old('type', 'public') === 'public' ? 'checked' : '' }}
-                                    class="mr-3 text-blue-600 focus:ring-blue-500">
+                                    class="mr-3 text-purple-600 focus:ring-purple-500">
                                 <div class="flex items-center">
-                                    <i data-lucide="globe" class="w-4 h-4 text-green-600 mr-2"></i>
+                                    <i class="ri-global-line w-4 text-green-600 mr-2"></i>
                                     <span class="text-sm text-gray-700">Pública - Visível a todos no grupo</span>
                                 </div>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center cursor-pointer">
                                 <input type="radio" name="type" value="private"
                                     {{ old('type') === 'private' ? 'checked' : '' }}
-                                    class="mr-3 text-blue-600 focus:ring-blue-500">
+                                    class="mr-3 text-purple-600 focus:ring-purple-500">
                                 <div class="flex items-center">
-                                    <i data-lucide="lock" class="w-4 h-4 text-gray-600 mr-2"></i>
+                                    <i class="ri-lock-line w-4 text-gray-600 mr-2"></i>
                                     <span class="text-sm text-gray-700">Privada - Apenas convidados específicos</span>
                                 </div>
                             </label>
@@ -129,11 +129,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <!-- Votação Anônima -->
                         <div>
-                            <label class="flex items-center space-x-3">
+                            <label class="flex items-center cursor-pointer">
                                 <input type="checkbox" name="anonymus" value="1" {{ old('anonymus') ? 'checked' : '' }}
-                                    class="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                <div class="flex items-center">
-                                    <i data-lucide="eye-off" class="w-4 h-4 text-gray-600 mr-2"></i>
+                                    class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                                <div class="flex items-center ml-2">
+                                    <i class="ri-eye-off-line w-4 text-gray-600 mr-2"></i>
                                     <span class="text-sm text-gray-700">Votação Anônima</span>
                                 </div>
                             </label>
@@ -142,12 +142,12 @@
 
                         <!-- Múltipla Escolha -->
                         <div>
-                            <label class="flex items-center space-x-3">
+                            <label class="flex items-center cursor-pointer">
                                 <input type="checkbox" name="allow_multiple" value="1"
                                     {{ old('allow_multiple') ? 'checked' : '' }}
-                                    class="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                <div class="flex items-center">
-                                    <i data-lucide="check-square" class="w-4 h-4 text-gray-600 mr-2"></i>
+                                    class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                                <div class="flex items-center ml-2">
+                                    <i class="ri-checkbox-multiple-line w-4 text-gray-600 mr-2"></i>
                                     <span class="text-sm text-gray-700">Permitir Múltipla Escolha</span>
                                 </div>
                             </label>
@@ -164,7 +164,7 @@
                             </label>
                             <input type="datetime-local" name="start_at" id="start_at"
                                 value="{{ old('start_at', now()->format('Y-m-d\TH:i')) }}"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none">
+                                class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
                             <p class="mt-1 text-xs text-gray-500">Quando a enquete será ativada</p>
                         </div>
 
@@ -174,7 +174,7 @@
                                 Data de Encerramento (Opcional)
                             </label>
                             <input type="datetime-local" name="end_at" id="end_at" value="{{ old('end_at') }}"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none">
+                                class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors">
                             <p class="mt-1 text-xs text-gray-500">Deixe em branco para enquete sem prazo</p>
                         </div>
                     </div>
@@ -185,21 +185,21 @@
                             Status Inicial
                         </label>
                         <div class="space-y-3">
-                            <label class="flex items-center">
+                            <label class="flex items-center cursor-pointer">
                                 <input type="radio" name="status" value="draft"
                                     {{ old('status', 'draft') === 'draft' ? 'checked' : '' }}
-                                    class="mr-3 text-blue-600 focus:ring-blue-500">
+                                    class="mr-3 text-purple-600 focus:ring-purple-500">
                                 <div class="flex items-center">
-                                    <i data-lucide="edit" class="w-4 h-4 text-gray-600 mr-2"></i>
+                                    <i class="ri-edit-line w-4 text-gray-600 mr-2"></i>
                                     <span class="text-sm text-gray-700">Rascunho - Salvar para editar depois</span>
                                 </div>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center cursor-pointer">
                                 <input type="radio" name="status" value="open"
                                     {{ old('status') === 'open' ? 'checked' : '' }}
-                                    class="mr-3 text-blue-600 focus:ring-blue-500">
+                                    class="mr-3 text-purple-600 focus:ring-purple-500">
                                 <div class="flex items-center">
-                                    <i data-lucide="play" class="w-4 h-4 text-green-600 mr-2"></i>
+                                    <i class="ri-play-line w-4 text-green-600 mr-2"></i>
                                     <span class="text-sm text-gray-700">Aberta - Iniciar votação imediatamente</span>
                                 </div>
                             </label>
@@ -210,13 +210,13 @@
                 <!-- Botões de Ação -->
                 <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-gray-200">
                     <a href="{{ route('polls.index', $group) }}"
-                        class="flex-1 sm:flex-none px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-center font-medium">
-                        <i data-lucide="arrow-left" class="w-4 h-4 inline mr-2"></i>
+                        class="flex-1 sm:flex-none inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 text-sm">
+                        <i class="ri-arrow-left-line mr-2"></i>
                         Cancelar
                     </a>
                     <button type="submit"
-                        class="flex-1 sm:flex-none px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                        <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>
+                        class="flex-1 sm:flex-none inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-purple-600 text-white hover:bg-purple-700 px-6 py-3 text-sm">
+                        <i class="ri-add-line mr-2"></i>
                         Criar Enquete
                     </button>
                 </div>
@@ -226,9 +226,9 @@
         <!-- Dicas -->
         <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Card de Dicas -->
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4">
                 <div class="flex items-start">
-                    <i data-lucide="lightbulb" class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0"></i>
+                    <i class="ri-lightbulb-line w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0"></i>
                     <div>
                         <h3 class="text-sm font-medium text-blue-900 mb-1">Dicas para uma boa enquete:</h3>
                         <ul class="text-sm text-blue-800 space-y-1">
@@ -242,9 +242,9 @@
             </div>
 
             <!-- Card de Configurações -->
-            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div class="bg-green-50 border border-green-200 rounded-2xl p-4">
                 <div class="flex items-start">
-                    <i data-lucide="settings" class="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0"></i>
+                    <i class="ri-settings-3-line w-5 text-green-600 mr-3 mt-0.5 flex-shrink-0"></i>
                     <div>
                         <h3 class="text-sm font-medium text-green-900 mb-1">Configurações Avançadas:</h3>
                         <ul class="text-sm text-green-800 space-y-1">

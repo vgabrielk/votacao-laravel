@@ -4,21 +4,20 @@
 @section('page-title', 'Amigos')
 
 @section('content')
-<div class="p-4 sm:p-6">
     <!-- Header Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
-        <div class="mb-4 sm:mb-0">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Meus Amigos</h1>
-            <p class="text-gray-600 mt-1 text-sm sm:text-base">Gerencie suas conexões e solicitações de amizade</p>
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 lg:mb-8">
+        <div class="mb-4 lg:mb-0">
+            <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">Meus Amigos</h1>
+            <p class="text-gray-600 mt-2">Gerencie suas conexões e solicitações de amizade</p>
         </div>
         <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-            <a href="{{ route('friends.create') }}" class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base">
-                <i data-lucide="user-plus" class="w-4 h-4 mr-2"></i>
+            <a href="{{ route('friends.create') }}" class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-purple-600 text-white hover:bg-purple-700 px-6 py-3 text-sm">
+                <i class="ri-user-add-line mr-2"></i>
                 Adicionar Amigo
             </a>
             <form action="{{ route('friends.index') }}" method="GET" class="inline">
-                <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base">
-                    <i data-lucide="refresh-cw" class="w-4 h-4 mr-2"></i>
+                <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 text-sm">
+                    <i class="ri-refresh-line mr-2"></i>
                     Atualizar
                 </button>
             </form>
@@ -26,39 +25,39 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-        <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100">
-            <div class="flex items-center">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                    <i data-lucide="users" class="w-5 h-5 sm:w-6 sm:h-6 text-green-600"></i>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-green-100 text-sm">Amigos Aceitos</p>
+                    <p class="text-2xl font-bold">{{ $friends->where('pivot.status', 'accepted')->count() }}</p>
                 </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-xs sm:text-sm text-gray-600">Amigos Aceitos</p>
-                    <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ $friends->where('pivot.status', 'accepted')->count() }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100">
-            <div class="flex items-center">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                    <i data-lucide="clock" class="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600"></i>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-xs sm:text-sm text-gray-600">Solicitações Pendentes</p>
-                    <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ $user->friendRequests->where('pivot.status', 'pending')->count() }}</p>
+                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                    <i class="ri-user-line text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100 sm:col-span-2 lg:col-span-1">
-            <div class="flex items-center">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                    <i data-lucide="user-plus" class="w-5 h-5 sm:w-6 sm:h-6 text-blue-600"></i>
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-2xl p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-yellow-100 text-sm">Solicitações Pendentes</p>
+                    <p class="text-2xl font-bold">{{ $user->friendRequests->where('pivot.status', 'pending')->count() }}</p>
                 </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-xs sm:text-sm text-gray-600">Total de Conexões</p>
-                    <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ $friends->count() + $user->friendRequests->count() }}</p>
+                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                    <i class="ri-time-line text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-blue-100 text-sm">Total de Conexões</p>
+                    <p class="text-2xl font-bold">{{ $friends->count() + $user->friendRequests->count() }}</p>
+                </div>
+                <div class="w-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                    <i class="ri-user-add-line text-xl"></i>
                 </div>
             </div>
         </div>
@@ -66,60 +65,59 @@
 
     <!-- Friends List -->
     @if($friends->count() > 0)
-    <div class="mb-6 sm:mb-8">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">Seus Amigos</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">Seus Amigos</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($friends as $friend)
-            <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100 hover:shadow-lg transition-shadow">
-                <div class="flex items-center space-x-3 sm:space-x-4 mb-3 sm:mb-4">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <div class="flex items-center space-x-4 mb-4">
+                    <div class="w-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center text-white font-bold">
+                        {{ strtoupper(substr($friend->name, 0, 1)) }}
+                    </div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="text-base sm:text-lg font-semibold text-gray-900 truncate">{{ $friend->name }}</h3>
-                        <p class="text-xs sm:text-sm text-gray-600 truncate">{{ $friend->email }}</p>
+                        <h3 class="text-lg font-semibold text-gray-900 truncate">{{ $friend->name }}</h3>
+                        <p class="text-sm text-gray-600 truncate">{{ $friend->email }}</p>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between mb-3 sm:mb-4">
-                    <span class="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium
+                <div class="flex items-center justify-between mb-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
                         @if ($friend->pivot->status === 'accepted') bg-green-100 text-green-800
                         @elseif($friend->pivot->status === 'pending') bg-yellow-100 text-yellow-800
                         @else bg-red-100 text-red-800 @endif">
-                        <div class="w-1.5 h-1.5 rounded-full mr-1.5
-                            @if ($friend->pivot->status === 'accepted') bg-green-400
-                            @elseif($friend->pivot->status === 'pending') bg-yellow-400
-                            @else bg-red-400 @endif"></div>
+                        <div class="w-2 h-2 rounded-full mr-2
+                            @if ($friend->pivot->status === 'accepted') bg-green-500
+                            @elseif($friend->pivot->status === 'pending') bg-yellow-500
+                            @else bg-red-500 @endif"></div>
                         {{ ucfirst($friend->pivot->status) }}
                     </span>
                 </div>
 
                 @if ($friend->pivot->status === 'pending')
-                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <div class="flex space-x-2">
                     <form action="{{ route('friends.acceptFriend', $friend->id) }}" method="POST" class="flex-1">
                         @csrf
-                        <button type="submit" class="w-full bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition-colors text-xs sm:text-sm font-medium">
-                            <i data-lucide="check" class="w-3 h-3 sm:w-4 sm:h-4 inline mr-1"></i>
+                        <button type="submit" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer bg-green-600 text-white hover:bg-green-700 px-4 py-2 text-sm">
+                            <i class="ri-check-line mr-2"></i>
                             Aceitar
                         </button>
                     </form>
                     <form action="{{ route('friends.removeFriend', $friend->id) }}" method="POST" class="flex-1">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="w-full bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors text-xs sm:text-sm font-medium">
-                            <i data-lucide="x" class="w-3 h-3 sm:w-4 sm:h-4 inline mr-1"></i>
+                        <button type="submit" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer bg-red-600 text-white hover:bg-red-700 px-4 py-2 text-sm">
+                            <i class="ri-close-line mr-2"></i>
                             Recusar
                         </button>
                     </form>
                 </div>
                 @elseif ($friend->pivot->status === 'accepted')
-                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                    {{-- <button class="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors text-xs sm:text-sm font-medium">
-                        <i data-lucide="message-circle" class="w-3 h-3 sm:w-4 sm:h-4 inline mr-1"></i>
-                        Mensagem
-                    </button> --}}
+                <div class="flex space-x-2">
                     <form action="{{ route('friends.removeFriend', $friend->id) }}" method="POST" class="flex-1">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="w-full bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors text-xs sm:text-sm font-medium">
-                            <i data-lucide="user-minus" class="w-3 h-3 sm:w-4 sm:h-4 inline mr-1"></i>
+                        <button type="submit" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 text-sm">
+                            <i class="ri-user-unfollow-line mr-2"></i>
                             Remover
                         </button>
                     </form>
@@ -133,41 +131,41 @@
 
     <!-- Friend Requests -->
     @if($user->friendRequests->count() > 0)
-    <div class="mb-6 sm:mb-8">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">Solicitações de Amizade</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">Solicitações de Amizade</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($user->friendRequests as $friendRequest)
-            <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100 hover:shadow-lg transition-shadow">
-                <div class="flex items-center space-x-3 sm:space-x-4 mb-3 sm:mb-4">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span class="text-white font-semibold text-sm sm:text-base">{{ substr($friendRequest->name, 0, 1) }}</span>
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <div class="flex items-center space-x-4 mb-4">
+                    <div class="w-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold">
+                        {{ strtoupper(substr($friendRequest->name, 0, 1)) }}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="text-base sm:text-lg font-semibold text-gray-900 truncate">{{ $friendRequest->name }}</h3>
-                        <p class="text-xs sm:text-sm text-gray-600 truncate">{{ $friendRequest->email }}</p>
+                        <h3 class="text-lg font-semibold text-gray-900 truncate">{{ $friendRequest->name }}</h3>
+                        <p class="text-sm text-gray-600 truncate">{{ $friendRequest->email }}</p>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between mb-3 sm:mb-4">
-                    <span class="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                        <div class="w-1.5 h-1.5 rounded-full mr-1.5 bg-yellow-400"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        <div class="w-2 h-2 rounded-full mr-2 bg-yellow-500"></div>
                         Pendente
                     </span>
                 </div>
 
-                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <div class="flex space-x-2">
                     <form action="{{ route('friends.acceptFriend', $friendRequest->pivot->id) }}" method="POST" class="flex-1">
                         @csrf
-                        <button type="submit" class="w-full bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition-colors text-xs sm:text-sm font-medium">
-                            <i data-lucide="check" class="w-3 h-3 sm:w-4 sm:h-4 inline mr-1"></i>
+                        <button type="submit" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer bg-green-600 text-white hover:bg-green-700 px-4 py-2 text-sm">
+                            <i class="ri-check-line mr-2"></i>
                             Aceitar
                         </button>
                     </form>
                     <form action="{{ route('friends.removeFriend', $friendRequest->pivot->id) }}" method="POST" class="flex-1">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="w-full bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors text-xs sm:text-sm font-medium">
-                            <i data-lucide="x" class="w-3 h-3 sm:w-4 sm:h-4 inline mr-1"></i>
+                        <button type="submit" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer bg-red-600 text-white hover:bg-red-700 px-4 py-2 text-sm">
+                            <i class="ri-close-line mr-2"></i>
                             Recusar
                         </button>
                     </form>
@@ -180,14 +178,14 @@
 
     <!-- Empty States -->
     @if($friends->count() === 0 && $user->friendRequests->count() === 0)
-    <div class="text-center py-8 sm:py-12">
-        <div class="w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i data-lucide="users" class="w-10 h-10 sm:w-12 sm:h-12 text-gray-400"></i>
+    <div class="text-center py-12">
+        <div class="w-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i class="ri-user-line text-2xl text-gray-400"></i>
         </div>
-        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">Nenhum amigo ainda</h3>
-        <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Comece adicionando seus primeiros amigos!</p>
-        <a href="{{ route('friends.create') }}" class="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base">
-            <i data-lucide="user-plus" class="w-4 h-4 mr-2"></i>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Nenhum amigo ainda</h3>
+        <p class="text-gray-600 mb-6">Comece adicionando seus primeiros amigos!</p>
+        <a href="{{ route('friends.create') }}" class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-purple-600 text-white hover:bg-purple-700 px-6 py-3 text-sm">
+            <i class="ri-user-add-line mr-2"></i>
             Adicionar Primeiro Amigo
         </a>
     </div>
