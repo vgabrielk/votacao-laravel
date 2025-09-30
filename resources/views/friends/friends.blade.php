@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100">
             <div class="flex items-center">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
@@ -50,7 +50,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100 sm:col-span-2 lg:col-span-1">
             <div class="flex items-center">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
@@ -72,15 +72,12 @@
             @foreach ($friends as $friend)
             <div class="bg-white rounded-xl p-4 sm:p-6 card-shadow border border-gray-100 hover:shadow-lg transition-shadow">
                 <div class="flex items-center space-x-3 sm:space-x-4 mb-3 sm:mb-4">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span class="text-white font-semibold text-sm sm:text-base">{{ substr($friend->name, 0, 1) }}</span>
-                    </div>
                     <div class="flex-1 min-w-0">
                         <h3 class="text-base sm:text-lg font-semibold text-gray-900 truncate">{{ $friend->name }}</h3>
                         <p class="text-xs sm:text-sm text-gray-600 truncate">{{ $friend->email }}</p>
                     </div>
                 </div>
-                
+
                 <div class="flex items-center justify-between mb-3 sm:mb-4">
                     <span class="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium
                         @if ($friend->pivot->status === 'accepted') bg-green-100 text-green-800
@@ -114,10 +111,10 @@
                 </div>
                 @elseif ($friend->pivot->status === 'accepted')
                 <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                    <button class="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors text-xs sm:text-sm font-medium">
+                    {{-- <button class="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors text-xs sm:text-sm font-medium">
                         <i data-lucide="message-circle" class="w-3 h-3 sm:w-4 sm:h-4 inline mr-1"></i>
                         Mensagem
-                    </button>
+                    </button> --}}
                     <form action="{{ route('friends.removeFriend', $friend->id) }}" method="POST" class="flex-1">
                         @csrf
                         @method('DELETE')
@@ -150,7 +147,7 @@
                         <p class="text-xs sm:text-sm text-gray-600 truncate">{{ $friendRequest->email }}</p>
                     </div>
                 </div>
-                
+
                 <div class="flex items-center justify-between mb-3 sm:mb-4">
                     <span class="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                         <div class="w-1.5 h-1.5 rounded-full mr-1.5 bg-yellow-400"></div>
