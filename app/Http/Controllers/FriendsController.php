@@ -47,7 +47,7 @@ class FriendsController extends Controller
         $user = Auth::user();
         $friend = User::where('email', $request->email)->first();
         if ($friend->id === $user->id) {
-            return redirect()->back()->with('error', 'You cannot add yourself.');
+            return redirect()->back()->with('error', 'Você não pode adicionar a si mesmo como amigo.');
         }
 
         $user->friends()->syncWithoutDetaching([
@@ -65,7 +65,7 @@ class FriendsController extends Controller
         // Envia e-mail em background
         // SendMailJob::dispatch($friend->email, new FriendRequestMail($user, $url));
 
-        return redirect()->route('friends.index')->with('success', 'Invitation sent!');
+        return redirect()->route('friends.index')->with('success', 'Convite de amizade enviado com sucesso!');
     }
 
     public function rejectFriend($pivotId)
@@ -80,13 +80,13 @@ class FriendsController extends Controller
                     ->first();
 
         if (!$pivot) {
-            return redirect()->route('friends.index')->with('error', 'Solicitação não encontrada.');
+            return redirect()->route('friends.index')->with('error', 'Solicitação de amizade não encontrada.');
         }
 
         // Atualiza status para 'blocked'
         $pivot->update(['status' => 'blocked']);
 
-        return redirect()->route('friends.index')->with('success', 'Solicitação rejeitada!');
+        return redirect()->route('friends.index')->with('success', 'Solicitação de amizade rejeitada com sucesso.');
 
     }
     public function acceptFriend($pivotId)
@@ -101,13 +101,13 @@ class FriendsController extends Controller
                     ->first();
 
         if (!$pivot) {
-            return redirect()->route('friends.index')->with('error', 'Solicitação não encontrada.');
+            return redirect()->route('friends.index')->with('error', 'Solicitação de amizade não encontrada.');
         }
 
         // Atualiza status para 'blocked'
         $pivot->update(['status' => 'accepted']);
 
-        return redirect()->route('friends.index')->with('success', 'Solicitação de amizade confirmada!');
+        return redirect()->route('friends.index')->with('success', 'Solicitação de amizade aceita com sucesso!');
 
     }
 }

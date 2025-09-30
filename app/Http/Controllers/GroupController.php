@@ -49,7 +49,7 @@ class GroupController extends Controller
         $group = new Group($request->validated());
         $group->creator()->associate($user);
         $group->save();
-        return redirect()->route('groups.index')->with('success', 'Group created successfully.');
+        return redirect()->route('groups.index')->with('success', 'Grupo criado com sucesso! Você já pode começar a adicionar membros.');
     }
 
     /**
@@ -82,7 +82,7 @@ class GroupController extends Controller
     public function destroy(Group $group)
     {
         $group->delete();
-        return redirect()->route('groups.index')->with('success', 'Group deleted successfuly');
+        return redirect()->route('groups.index')->with('success', 'Grupo excluído com sucesso!');
     }
 
 
@@ -102,7 +102,7 @@ $this->authorize('canManageGroup', $group);
             if (! $user) {
                 return redirect()
                     ->route('groups.index')
-                    ->with('error', 'Usuário não encontrado!');
+                    ->with('error', 'Usuário não encontrado. Verifique o e-mail informado e tente novamente.');
             }
 
             $group->members()->attach($user->id, [
@@ -115,7 +115,7 @@ $this->authorize('canManageGroup', $group);
 
             return redirect()
                 ->route('groups.index')
-                ->with('success', 'Usuário adicionado com sucesso!');
+                ->with('success', 'Membro adicionado ao grupo com sucesso!');
         } catch (QueryException $e) {
             Log::error('Erro ao adicionar membro ao grupo', [
                 'group_id' => $group->id,
@@ -125,14 +125,14 @@ $this->authorize('canManageGroup', $group);
 
             return redirect()
                 ->route('groups.index')
-                ->with('error', 'Ocorreu um erro ao adicionar o usuário.');
+                ->with('error', 'Erro ao adicionar membro ao grupo. O usuário pode já estar no grupo.');
         } catch (\Exception $e) {
             Log::error('Erro inesperado ao adicionar membro', [
                 'error' => $e->getMessage(),
             ]);
             return redirect()
                 ->route('groups.index')
-                ->with('error', 'Erro inesperado, tente novamente.');
+                ->with('error', 'Erro inesperado. Tente novamente em alguns instantes.');
         }
     }
 

@@ -22,7 +22,7 @@ class CheckUserStatus
             $request->session()->invalidate();
             $request->session()->regenerateToken();
             
-            return redirect()->route('login')->with('error', 'Sua conta está inativa. Entre em contato com o administrador.');
+            return redirect()->route('login')->with('error', 'Sua conta está temporariamente inativa. Entre em contato com o suporte para reativar sua conta.');
         }
 
         return $next($request);

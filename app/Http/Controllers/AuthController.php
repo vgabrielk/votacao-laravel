@@ -32,13 +32,13 @@ class AuthController extends Controller
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['As credenciais fornecidas estão incorretas.'],
+                'email' => ['As credenciais fornecidas estão incorretas. Verifique seu e-mail e senha e tente novamente.'],
             ]);
         }
 
         if (!$user->isActive()) {
             throw ValidationException::withMessages([
-                'email' => ['Sua conta está inativa. Entre em contato com o administrador.'],
+                'email' => ['Sua conta está temporariamente inativa. Entre em contato com o suporte para reativar sua conta.'],
             ]);
         }
 
@@ -77,7 +77,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect('/dashboard')->with('success', 'Conta criada com sucesso!');
+        return redirect('/dashboard')->with('success', 'Conta criada com sucesso! Bem-vindo à nossa plataforma.');
     }
 
     /**
