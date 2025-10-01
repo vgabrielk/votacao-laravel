@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+
+use App\Jobs\SendMailJob;
+
 use App\Models\User;
 use App\Models\UserFriendList;
 use App\Mail\FriendRequestMail;
@@ -165,10 +168,14 @@ class FriendService
         $url = route('friends.index');
 
         // Enviar email diretamente (mais rápido para desenvolvimento)
-        Mail::to($friend->email)->send(new FriendRequestMail($user, $url));
+
+// Mail::to($friend->email)->send(new FriendRequestMail($user, $url));
+
 
         // Para produção, usar queue:
-        // SendMailJob::dispatch($friend->email, new FriendRequestMail($user, $url));
+
+SendMailJob::dispatch($friend->email, new FriendRequestMail($user, $url));
+
     }
 
     /**
