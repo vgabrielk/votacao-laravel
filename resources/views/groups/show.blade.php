@@ -68,31 +68,74 @@
     <!-- Main Content -->
     <div class="space-y-6">
         <!-- Group Details -->
-        <div class="bg-white rounded-2xl p-4 lg:p-8 shadow-sm border border-gray-100">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                <h2 class="text-lg lg:text-xl font-semibold text-gray-900 mb-2 sm:mb-0">Detalhes do Grupo</h2>
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
-                    @if ($group->visibility === 'public') bg-green-100 text-green-800
-                    @else bg-gray-100 text-gray-800 @endif">
-                    <div class="w-2 h-2 rounded-full mr-2
-                        @if ($group->visibility === 'public') bg-green-500
-                        @else bg-gray-500 @endif"></div>
-                    {{ ucfirst($group->visibility) }}
-                </span>
+        <div class="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-6 lg:p-8 shadow-lg border border-gray-200/50 backdrop-blur-sm">
+            <!-- Header com gradiente -->
+            <div class="mb-8">
+                <!-- Mobile: Badge acima, título abaixo -->
+                <div class="flex flex-col space-y-4 sm:hidden">
+                    <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold shadow-md w-fit
+                        @if ($group->visibility === 'public') bg-gradient-to-r from-green-500 to-emerald-500 text-white
+                        @else bg-gradient-to-r from-gray-500 to-gray-600 text-white @endif">
+                        <div class="w-2 h-2 rounded-full mr-2 bg-white/80"></div>
+                        {{ ucfirst($group->visibility) }}
+                    </span>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900">Detalhes do Grupo</h2>
+                        <p class="text-sm text-gray-500">Informações e estatísticas</p>
+                    </div>
+                </div>
+                
+                <!-- Desktop: Badge ao lado do título -->
+                <div class="hidden sm:flex items-center space-x-3">
+                    <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold shadow-md
+                        @if ($group->visibility === 'public') bg-gradient-to-r from-green-500 to-emerald-500 text-white
+                        @else bg-gradient-to-r from-gray-500 to-gray-600 text-white @endif">
+                        <div class="w-2 h-2 rounded-full mr-2 bg-white/80"></div>
+                        {{ ucfirst($group->visibility) }}
+                    </span>
+                    <div>
+                        <h2 class="text-xl lg:text-2xl font-bold text-gray-900">Detalhes do Grupo</h2>
+                        <p class="text-sm text-gray-500">Informações e estatísticas</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                <div class="flex items-center text-sm text-gray-600">
-                    <i class="ri-calendar-line mr-3 flex-shrink-0"></i>
-                    <span>Criado em: <strong>{{ $group->created_at->format('d/m/Y') }}</strong></span>
+            <!-- Cards de informações -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="ri-calendar-line text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Criado em</p>
+                            <p class="text-lg font-bold text-gray-900">{{ $group->created_at->format('d/m/Y') }}</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center text-sm text-gray-600">
-                    <i class="ri-user-line mr-3 flex-shrink-0"></i>
-                    <span>Criado por: <strong>{{ strlen(explode(' ', $group->creator->name)[0]) > 4 ? substr(explode(' ', $group->creator->name)[0], 0, 4) . '...' : explode(' ', $group->creator->name)[0] }}</strong></span>
+
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="ri-user-line text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Criado por</p>
+                            <p class="text-lg font-bold text-gray-900">{{ $shortName }}</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center text-sm text-gray-600">
-                    <i class="ri-group-line mr-3 flex-shrink-0"></i>
-                    <span>Membros: <strong>{{ $group->members->count() }}</strong></span>
+
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="ri-group-line text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Membros</p>
+                            <p class="text-lg font-bold text-gray-900">{{ $group->members->count() }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -105,12 +148,44 @@
         </div>
 
         <!-- Polls Section -->
-        <div class="bg-white rounded-2xl p-4 lg:p-8 shadow-sm border border-gray-100">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                <h3 class="text-lg lg:text-xl font-semibold text-gray-900 mb-2 sm:mb-0">Enquetes do Grupo</h3>
-                <a href="{{ route('polls.index', $group) }}" class="text-purple-600 hover:text-purple-700 text-sm font-medium">
-                    Ver todas
-                </a>
+        <div class="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-6 lg:p-8 shadow-lg border border-gray-200/50 backdrop-blur-sm">
+            <!-- Header com gradiente -->
+            <div class="mb-8">
+                <!-- Mobile: Layout vertical -->
+                <div class="flex flex-col space-y-4 sm:hidden">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-lg">
+                            <i class="ri-bar-chart-line text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">Enquetes do Grupo</h3>
+                            <p class="text-sm text-gray-500">Pesquisas e votações</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-start">
+                        <a href="{{ route('polls.index', $group) }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300">
+                            <i class="ri-eye-line mr-2"></i>
+                            Ver todas
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Desktop: Layout horizontal -->
+                <div class="hidden sm:flex sm:items-center sm:justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-lg">
+                            <i class="ri-bar-chart-line text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl lg:text-2xl font-bold text-gray-900">Enquetes do Grupo</h3>
+                            <p class="text-sm text-gray-500">Pesquisas e votações</p>
+                        </div>
+                    </div>
+                    <a href="{{ route('polls.index', $group) }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300">
+                        <i class="ri-eye-line mr-2"></i>
+                        Ver todas
+                    </a>
+                </div>
             </div>
 
             @if($group->polls->count() > 0)
@@ -162,34 +237,53 @@
         </div>
 
         <!-- Add Members Section -->
-        <div class="bg-white rounded-xl p-4 lg:p-8 card-shadow border border-gray-100">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Adicionar Membros</h3>
-            <form action="{{ route('groups.addMember', $group->id) }}" method="POST" class="space-y-4">
-                @csrf
+        <div class="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-6 lg:p-8 shadow-lg border border-gray-200/50 backdrop-blur-sm">
+            <!-- Header com gradiente -->
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <i class="ri-user-add-line text-white text-xl"></i>
+                </div>
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                        E-mail do usuário <span class="text-red-500">*</span>
-                    </label>
-                    <input id="email"
-                           name="email"
-                           type="email"
-                           required
-                           value="{{ old('email') }}"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none @error('email') border-red-300 focus:ring-red-500 focus:border-red-500 @enderror"
-                           placeholder="ex: usuario@exemplo.com">
-                    @error('email')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <h3 class="text-xl lg:text-2xl font-bold text-gray-900">Adicionar Membros</h3>
+                    <p class="text-sm text-gray-500">Convide pessoas para o grupo</p>
                 </div>
+            </div>
+            <!-- Formulário moderno -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-md border border-gray-100">
+                <form action="{{ route('groups.addMember', $group->id) }}" method="POST" class="space-y-6">
+                    @csrf
+                    <div>
+                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-3">
+                            <i class="ri-mail-line mr-2 text-indigo-500"></i>
+                            E-mail do usuário <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input id="email"
+                                   name="email"
+                                   type="email"
+                                   required
+                                   value="{{ old('email') }}"
+                                   class="w-full px-4 py-4 pl-12 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 outline-none bg-gray-50/50 backdrop-blur-sm @error('email') border-red-300 focus:ring-red-500 focus:border-red-500 @enderror"
+                                   placeholder="ex: usuario@exemplo.com">
+                            <i class="ri-mail-line absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                        @error('email')
+                            <p class="mt-2 text-sm text-red-600 flex items-center">
+                                <i class="ri-error-warning-line mr-1"></i>
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
 
-                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                    <button type="submit"
-                        class="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
-                        <i data-lucide="user-plus" class="w-4 mr-2"></i>
-                        Adicionar Membro
-                    </button>
-                </div>
-            </form>
+                    <div class="flex justify-end">
+                        <button type="submit"
+                                class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-8 py-4 rounded-2xl hover:shadow-lg transition-all duration-300 font-semibold flex items-center justify-center">
+                            <i class="ri-user-add-line mr-2"></i>
+                            Adicionar Membro
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- Members List -->

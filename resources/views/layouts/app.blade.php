@@ -188,28 +188,7 @@
                         </button>
                         <h2 class="text-lg lg:text-xl font-semibold text-gray-800">@yield('page-title', 'Dashboard')</h2>
                     </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="hidden md:flex flex-1 max-w-md">
-                            <div class="relative">
-                                <i class="ri-search-line absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
-                                <input placeholder="Search your course..." class="w-full pl-12 pr-4 py-3 bg-gray-50 border-0 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white" type="text">
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2 lg:space-x-4">
-                            <button class="p-2 text-gray-400 hover:text-gray-600 cursor-pointer">
-                                <i class="ri-notification-3-line text-xl"></i>
-                            </button>
-                            <button class="p-2 text-gray-400 hover:text-gray-600 cursor-pointer">
-                                <i class="ri-settings-3-line text-xl"></i>
-                            </button>
-                            <div class="hidden lg:flex items-center space-x-3 cursor-pointer">
-                                <div class="w-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-                                    <span class="text-gray-500 font-medium text-sm">{{ substr(Auth::user()->name, 0, 1) }}</span>
-                                </div>
-                                <span class="font-medium text-gray-900">{{ Auth::user()->name }}</span>
-                            </div>
-                        </div>
-                    </div>
+                   
                 </div>
             </header>
 
