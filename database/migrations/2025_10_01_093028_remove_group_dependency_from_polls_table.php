@@ -12,11 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('polls', function (Blueprint $table) {
-            $table->dropForeign(['group_id']);
+            // Verificar se a foreign key existe antes de removê-la
+            if (Schema::hasColumn('polls', 'group_id')) {
+                $table->dropForeign(['group_id']);
+                $table->dropColumn('group_id');
+            }
             
-            $table->dropColumn('group_id');
-            
-            $table->dropColumn('scope');
+            // Verificar se a coluna scope existe antes de removê-la
+            if (Schema::hasColumn('polls', 'scope')) {
+                $table->dropColumn('scope');
+            }
         });
     }
 
