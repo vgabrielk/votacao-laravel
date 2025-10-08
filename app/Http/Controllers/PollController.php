@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Group;
 use App\Services\PollService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,9 +16,9 @@ class PollController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Group $group)
+    public function index()
     {
-        $result = $this->pollService->listPolls($group);
+        $result = $this->pollService->listPolls();
 
         if (!$result->success) {
             return redirect()->back()
@@ -27,23 +26,23 @@ class PollController extends Controller
         }
 
         $polls = $result->data['polls'] ?? collect();
-        return view('polls.index', compact('group', 'result', 'polls'));
+        return view('polls.index', compact('result', 'polls'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Group $group)
+    public function create()
     {
-        return view('polls.create', compact('group'));
+        return view('polls.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Group $group)
+    public function store(Request $request)
     {
-        $result = $this->pollService->createPoll($group, $request);
+        $result = $this->pollService->createPoll($request);
 
         if (!$result->success) {
             return redirect()->back()
@@ -51,32 +50,32 @@ class PollController extends Controller
                 ->with('error', $result->message);
         }
 
-        return redirect()->route('polls.index', $group)
+        return redirect()->route('polls.index')
             ->with('success', $result->message);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Group $group, $pollId)
+    public function show($pollId)
     {
-        $result = $this->pollService->getPoll($group, $pollId);
+        $result = $this->pollService->getPoll($pollId);
 
         if (!$result->success) {
-            return redirect()->route('polls.index', $group)
+            return redirect()->route('polls.index')
                 ->with('error', $result->message);
         }
 
         $poll = $result->data['poll'];
-        return view('polls.show', compact('group', 'poll'));
+        return view('polls.show', compact('poll'));
     }
 
     /**
      * Publish a draft poll.
      */
-    public function publish(Group $group, $pollId)
+    public function publish($pollId)
     {
-        $result = $this->pollService->publishPoll($group, $pollId);
+        $result = $this->pollService->publishPoll($pollId);
 
         if (!$result->success) {
             return redirect()->back()
@@ -90,9 +89,9 @@ class PollController extends Controller
     /**
      * Close an open poll.
      */
-    public function close(Group $group, $pollId)
+    public function close($pollId)
     {
-        $result = $this->pollService->closePoll($group, $pollId);
+        $result = $this->pollService->closePoll($pollId);
 
         if (!$result->success) {
             return redirect()->back()
@@ -106,13 +105,13 @@ class PollController extends Controller
     /**
      * Vote on a poll.
      */
-    public function vote(Request $request, Group $group, $pollId)
+    public function vote(Request $request, $pollId)
     {
         $request->validate([
             'option_id' => 'required|exists:poll_options,id'
         ]);
 
-        $result = $this->pollService->votePoll($group, $pollId, $request->option_id, Auth::id());
+        $result = $this->pollService->votePoll($pollId, $request->option_id, Auth::id());
 
         if (!$result->success) {
             return redirect()->back()
@@ -126,9 +125,16 @@ class PollController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Group $group, $pollId)
+    public function destroy($pollId)
     {
-        // Por enquanto, apenas redireciona de volta
-        return redirect()->route('polls.index', $group)->with('success', 'Enquete excluída com sucesso!');
+        $result = $this->pollService->deletePoll($pollId);
+
+        if (!$result->success) {
+            return redirect()->back()
+                ->with('error', $result->message);
+        }
+
+        return redirect()->route('polls.index')
+            ->with('success', $result->message);
     }
 }

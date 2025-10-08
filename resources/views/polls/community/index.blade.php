@@ -17,7 +17,7 @@
             <p class="text-gray-600 mt-2">Todas as enquetes disponíveis</p>
         </div>
         <div class="flex flex-col sm:flex-row gap-3">
-            <a href="{{ route('polls.create') }}"
+            <a href="{{ route('public.polls.create') }}"
                 class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-purple-600 text-white hover:bg-purple-700 px-6 py-3 text-sm w-full sm:w-auto">
                 <i class="ri-add-line mr-2"></i>
                 Criar Nova Enquete
@@ -109,7 +109,7 @@
                             </div>
                         </div>
                         <div class="flex flex-col sm:flex-row gap-2">
-                            <a href="{{ route('polls.show', $poll->id) }}"
+                            <a href="{{ route('public.polls.show', $poll->id) }}"
                                 class="inline-flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
                                 <i class="ri-eye-line w-4 mr-1"></i>
                                 Ver Enquete
@@ -117,7 +117,7 @@
 
                             @if ($poll->creator_id === Auth::id())
                                 @if ($poll->status === 'draft')
-                                    <form action="{{ route('polls.publish', $poll->id) }}" method="POST"
+                                    <form action="{{ route('public.polls.publish', $poll->id) }}" method="POST"
                                         class="inline">
                                         @csrf
                                         <button type="submit"
@@ -127,7 +127,7 @@
                                         </button>
                                     </form>
                                 @elseif($poll->status === 'open')
-                                    <form action="{{ route('polls.close', $poll->id) }}" method="POST"
+                                    <form action="{{ route('public.polls.close', $poll->id) }}" method="POST"
                                         class="inline">
                                         @csrf
                                         <button type="submit"
@@ -197,7 +197,7 @@
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Nenhuma enquete ainda</h3>
                 <p class="text-sm sm:text-base text-gray-600 mb-6">Crie a primeira enquete</p>
-                <a href="{{ route('polls.create') }}"
+                <a href="{{ route('public.polls.create') }}"
                     class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
                     <i class="ri-add-line w-4 mr-2"></i>
                     Criar Enquete

@@ -29,13 +29,6 @@
             description="Aguardando aprovação"
         />
 
-        <x-stats-card 
-            title="Grupos Ativos" 
-            :value="$user->groups->count()" 
-            icon="ri-group-line" 
-            gradient="from-purple-500 to-purple-600" 
-            text-color="text-purple-100" 
-        />
     </div>
 
     <!-- Main Content Grid -->
@@ -82,12 +75,6 @@
                             <i class="ri-user-add-line text-blue-600"></i>
                         </div>
                         <span class="text-base text-gray-700">Adicionar Amigo</span>
-                    </a>
-                    <a href="{{ route('groups.create') }}" class="flex items-center space-x-3 py-3 rounded-2xl hover:bg-gray-50 transition-colors">
-                        <div class="w-8 bg-purple-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                            <i class="ri-group-line text-purple-600"></i>
-                        </div>
-                        <span class="text-base text-gray-700">Criar Grupo</span>
                     </a>
                     <a href="{{ route('friends.index') }}" class="flex items-center space-x-3 py-3 rounded-2xl hover:bg-gray-50 transition-colors">
                         <div class="w-8 bg-green-100 rounded-2xl flex items-center justify-center flex-shrink-0">

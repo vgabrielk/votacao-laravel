@@ -84,6 +84,7 @@ class AuthController extends Controller
 
         Mail::to($user->email)->send(new WelcomeMail($user));
 
+
         Auth::login($user);
 
         return redirect('/dashboard')->with('success', 'Conta criada com sucesso! Bem-vindo à nossa plataforma.');

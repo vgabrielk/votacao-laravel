@@ -2,15 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\Group;
 use App\Models\Poll;
 use Illuminate\Support\Facades\Auth;
 
 class PollService
 {
-    public function createPoll(Group $group, $request): ServiceResult
+    public function createPoll($request): ServiceResult
     {
-        $poll = $group->polls()->create(array_merge($request->all(), [
+        $poll = Poll::create(array_merge($request->all(), [
             'creator_id' => Auth::user()->id
         ]));
 
@@ -21,23 +20,20 @@ class PollService
         }
 
         return ServiceResult::success('Enquete criada com sucesso!');
-
     }
 
-    public function listPolls(Group $group): ServiceResult
+    public function listPolls(): ServiceResult
     {
-        $polls = $group->polls()
-            ->with(['creator', 'options'])
+        $polls = Poll::with(['creator', 'options'])
             ->orderBy('created_at', 'desc')
             ->get();
 
         return ServiceResult::success('Enquetes carregadas com sucesso!', ['polls' => $polls]);
     }
 
-    public function getPoll(Group $group, $pollId): ServiceResult
+    public function getPoll($pollId): ServiceResult
     {
-        $poll = $group->polls()
-            ->with(['creator', 'options'])
+        $poll = Poll::with(['creator', 'options', 'votes'])
             ->find($pollId);
 
         if (!$poll) {
@@ -47,9 +43,9 @@ class PollService
         return ServiceResult::success('Enquete carregada com sucesso!', ['poll' => $poll]);
     }
 
-    public function publishPoll(Group $group, $pollId): ServiceResult
+    public function publishPoll($pollId): ServiceResult
     {
-        $poll = $group->polls()->find($pollId);
+        $poll = Poll::find($pollId);
 
         if (!$poll) {
             return ServiceResult::error('Enquete não encontrada!');
@@ -64,9 +60,9 @@ class PollService
         return ServiceResult::success('Enquete publicada com sucesso!');
     }
 
-    public function closePoll(Group $group, $pollId): ServiceResult
+    public function closePoll($pollId): ServiceResult
     {
-        $poll = $group->polls()->find($pollId);
+        $poll = Poll::find($pollId);
 
         if (!$poll) {
             return ServiceResult::error('Enquete não encontrada!');
@@ -81,9 +77,9 @@ class PollService
         return ServiceResult::success('Enquete encerrada com sucesso!');
     }
 
-    public function votePoll(Group $group, $pollId, $optionId, $userId): ServiceResult
+    public function votePoll($pollId, $optionId, $userId): ServiceResult
     {
-        $poll = $group->polls()->find($pollId);
+        $poll = Poll::find($pollId);
 
         if (!$poll) {
             return ServiceResult::error('Enquete não encontrada!');
@@ -117,4 +113,21 @@ class PollService
         return ServiceResult::success('Voto registrado com sucesso!');
     }
 
+    public function deletePoll($pollId): ServiceResult
+    {
+        $poll = Poll::find($pollId);
+
+        if (!$poll) {
+            return ServiceResult::error('Enquete não encontrada!');
+        }
+
+        // Verificar se o usuário é o criador da enquete
+        if ($poll->creator_id !== Auth::id()) {
+            return ServiceResult::error('Você não tem permissão para deletar esta enquete!');
+        }
+
+        $poll->delete();
+
+        return ServiceResult::success('Enquete deletada com sucesso!');
+    }
 }

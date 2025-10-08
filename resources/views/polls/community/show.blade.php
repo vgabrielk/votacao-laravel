@@ -7,7 +7,7 @@
     <!-- Breadcrumb -->
     <x-breadcrumb :items="[
         ['label' => 'Dashboard', 'url' => route('dashboard')],
-        ['label' => 'Enquetes', 'url' => route('polls.index')],
+        ['label' => 'Enquetes', 'url' => route('public.polls.index')],
         ['label' => $poll->title ?? 'Enquete', 'url' => '#']
     ]" />
 
@@ -22,12 +22,12 @@
                 @endif
             </div>
             <div class="flex flex-col sm:flex-row gap-3">
-                <a href="{{ route('polls.index') }}"
+                <a href="{{ route('public.polls.index') }}"
                     class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 text-sm">
                     <i class="ri-arrow-left-line mr-2"></i>
                     Voltar às Enquetes
                 </a>
-                <a href="{{ route('polls.create') }}"
+                <a href="{{ route('public.polls.create') }}"
                     class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer bg-purple-600 text-white hover:bg-purple-700 px-6 py-3 text-sm">
                     <i class="ri-add-line mr-2"></i>
                     Criar Enquete
@@ -89,7 +89,7 @@
 
             <!-- Poll Options -->
             @if($poll->status === 'open')
-                <form id="pollVoteForm" action="{{ route('polls.vote', $poll->id) }}" method="POST">
+                <form id="pollVoteForm" action="{{ route('public.polls.vote', $poll->id) }}" method="POST">
                     @csrf
                     <div class="space-y-4">
                         @foreach($poll->options as $option)
@@ -147,7 +147,7 @@
                     </button>
                 @elseif($poll->status === 'draft')
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <form action="{{ route('polls.publish', $poll->id) }}" method="POST" class="inline">
+                        <form action="{{ route('public.polls.publish', $poll->id) }}" method="POST" class="inline">
                             @csrf
                             <button type="submit" 
                                     id="publishButton"
@@ -268,7 +268,7 @@
                     <span class="text-gray-700">Configurações</span>
                 </button>
                 @if(isset($poll) && $poll->creator_id === Auth::id())
-                    <form action="{{ route('polls.destroy', $poll->id) }}" method="POST" class="sm:col-span-2">
+                    <form action="{{ route('public.polls.destroy', $poll->id) }}" method="POST" class="sm:col-span-2">
                         @csrf
                         @method('DELETE')
                         <button type="button"

@@ -142,9 +142,9 @@
                         <i class="ri-user-line text-lg"></i>
                         <span class="font-medium">Amigos</span>
                     </a>
-                    <a href="{{ route('groups.index') }}" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors cursor-pointer {{ request()->routeIs('groups.*') ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
-                        <i class="ri-group-line text-lg"></i>
-                        <span class="font-medium">Grupos</span>
+                    <a href="{{ route('polls.index') }}" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors cursor-pointer {{ request()->routeIs('polls.*') ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
+                        <i class="ri-survey-line text-lg"></i>
+                        <span class="font-medium">Enquetes</span>
                     </a>
                 </div>
             </div>

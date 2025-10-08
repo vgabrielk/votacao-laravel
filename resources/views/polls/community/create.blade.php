@@ -7,7 +7,7 @@
     <!-- Breadcrumb -->
     <x-breadcrumb :items="[
         ['label' => 'Dashboard', 'url' => route('dashboard')],
-        ['label' => 'Enquetes', 'url' => route('polls.index')],
+        ['label' => 'Enquetes', 'url' => route('public.polls.index')],
         ['label' => 'Criar Enquete', 'url' => '#']
     ]" />
 
@@ -19,7 +19,7 @@
                 <p class="text-gray-600 mt-2">Crie uma enquete interativa</p>
             </div>
             <div class="flex flex-col sm:flex-row gap-3">
-                <a href="{{ route('polls.index') }}"
+                <a href="{{ route('public.polls.index') }}"
                     class="inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 text-sm">
                     <i class="ri-arrow-left-line mr-2"></i>
                     Voltar às Enquetes
@@ -30,7 +30,7 @@
 
     <!-- Form Card -->
     <div class="bg-white rounded-2xl p-4 lg:p-8 shadow-sm border border-gray-100">
-        <form method="POST" action="{{ route('polls.store') }}" class="space-y-6" id="pollForm">
+        <form method="POST" action="{{ route('public.polls.store') }}" class="space-y-6" id="pollForm">
             @csrf
 
             <!-- Título da Enquete -->
@@ -214,7 +214,7 @@
 
                 <!-- Botões de Ação -->
                 <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-gray-200">
-                    <a href="{{ route('polls.index') }}"
+                    <a href="{{ route('public.polls.index') }}"
                         class="flex-1 sm:flex-none inline-flex items-center justify-center font-medium rounded-2xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 text-sm">
                         <i class="ri-arrow-left-line mr-2"></i>
                         Cancelar
