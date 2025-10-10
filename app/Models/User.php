@@ -86,4 +86,27 @@ class User extends Authenticatable
                 ->wherePivot('status', 'accepted');
 }
 
+    // Chat relationships
+    public function createdRooms()
+    {
+        return $this->hasMany(Room::class, 'created_by');
+    }
+
+    public function rooms()
+    {
+        return $this->belongsToMany(Room::class, 'room_participants')
+                    ->withPivot(['joined_at', 'last_read_at'])
+                    ->withTimestamps();
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function roomParticipants()
+    {
+        return $this->hasMany(RoomParticipant::class);
+    }
+
 }

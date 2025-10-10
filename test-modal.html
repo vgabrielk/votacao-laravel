@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Modal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <h1 class="text-2xl font-bold mb-4">Teste do Modal</h1>
+    
+    <button id="testBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+        Abrir Modal
+    </button>
+    
+    <!-- Modal -->
+    <div id="testModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50" style="display: none;">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold mb-4">Modal de Teste</h3>
+                    <p class="mb-4">Este é um modal de teste!</p>
+                    <button id="closeBtn" class="bg-red-600 text-white px-4 py-2 rounded">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const testBtn = document.getElementById('testBtn');
+        const testModal = document.getElementById('testModal');
+        const closeBtn = document.getElementById('closeBtn');
+        
+        testBtn.addEventListener('click', () => {
+            console.log('Botão clicado!');
+            testModal.style.display = 'block';
+            console.log('Modal deve estar visível');
+        });
+        
+        closeBtn.addEventListener('click', () => {
+            testModal.style.display = 'none';
+        });
+        
+        // Fechar ao clicar fora do modal
+        testModal.addEventListener('click', (e) => {
+            if (e.target === testModal) {
+                testModal.style.display = 'none';
+            }
+        });
+        
+        console.log('Script carregado!');
+    </script>
+</body>
+</html>

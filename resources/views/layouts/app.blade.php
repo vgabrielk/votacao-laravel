@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Choicefy')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
@@ -145,6 +146,10 @@
                     <a href="{{ route('polls.index') }}" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors cursor-pointer {{ request()->routeIs('polls.*') ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
                         <i class="ri-survey-line text-lg"></i>
                         <span class="font-medium">Enquetes</span>
+                    </a>
+                    <a href="{{ route('chat.index') }}" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors cursor-pointer {{ request()->routeIs('chat.*') ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
+                        <i class="ri-chat-3-line text-lg"></i>
+                        <span class="font-medium">Chat</span>
                     </a>
                 </div>
             </div>
@@ -423,5 +428,7 @@
             </div>
         </div>
     </div>
+
+    @stack('scripts')
 </body>
 </html>

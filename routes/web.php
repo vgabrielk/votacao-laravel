@@ -5,6 +5,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\FriendsController;
 use App\Http\Controllers\PollController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Auth;
 
 // Rotas públicas
@@ -46,5 +49,23 @@ Route::middleware(['auth', 'user.status'])->group(function () {
     Route::post('/polls/{poll}/publish', [PollController::class, 'publish'])->name('polls.publish');
     Route::post('/polls/{poll}/close', [PollController::class, 'close'])->name('polls.close');
     Route::delete('/polls/{poll}', [PollController::class, 'destroy'])->name('polls.destroy');
+
+    // Rotas de Chat
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/direct/{friend}', [ChatController::class, 'direct'])->name('chat.direct');
+    Route::get('/chat/{room}', [ChatController::class, 'show'])->name('chat.show');
+    
+    // API Routes for Chat
+    Route::prefix('api')->group(function () {
+        Route::get('/rooms', [RoomController::class, 'index']);
+        Route::post('/rooms', [RoomController::class, 'store']);
+        Route::get('/rooms/{room}', [RoomController::class, 'show']);
+        Route::post('/rooms/{room}/participants', [RoomController::class, 'addParticipant']);
+        Route::delete('/rooms/{room}/participants', [RoomController::class, 'removeParticipant']);
+        
+        Route::get('/rooms/{room}/messages', [MessageController::class, 'index']);
+        Route::post('/rooms/{room}/messages', [MessageController::class, 'store']);
+        Route::post('/rooms/{room}/mark-read', [MessageController::class, 'markAsRead']);
+    });
 
 });

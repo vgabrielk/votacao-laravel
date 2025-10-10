@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Formulário</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <h1 class="text-2xl font-bold mb-4">Teste de Formulário</h1>
+    
+    <button id="openModal" class="bg-blue-600 text-white px-4 py-2 rounded mb-4">
+        Abrir Modal
+    </button>
+    
+    <!-- Modal -->
+    <div id="testModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50" style="display: none;">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold mb-4">Teste de Formulário</h3>
+                    <form id="testForm" onsubmit="return false;">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nome</label>
+                            <input type="text" id="testName" name="name" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+                            <textarea id="testDescription" name="description" rows="3"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md"></textarea>
+                        </div>
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" id="closeModal" 
+                                    class="px-4 py-2 text-gray-600 hover:text-gray-800">
+                                Cancelar
+                            </button>
+                            <button type="button" id="submitForm" 
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                Enviar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="result" class="mt-4 p-4 bg-gray-100 rounded"></div>
+    
+    <script>
+        const openModal = document.getElementById('openModal');
+        const testModal = document.getElementById('testModal');
+        const closeModal = document.getElementById('closeModal');
+        const submitForm = document.getElementById('submitForm');
+        const testForm = document.getElementById('testForm');
+        const result = document.getElementById('result');
+        
+        openModal.addEventListener('click', () => {
+            console.log('Abrindo modal...');
+            testModal.style.display = 'block';
+        });
+        
+        closeModal.addEventListener('click', () => {
+            console.log('Fechando modal...');
+            testModal.style.display = 'none';
+        });
+        
+        submitForm.addEventListener('click', () => {
+            console.log('Botão enviar clicado!');
+            
+            const formData = new FormData(testForm);
+            const data = {
+                name: formData.get('name'),
+                description: formData.get('description')
+            };
+            
+            console.log('Dados:', data);
+            
+            // Simular envio
+            result.innerHTML = `
+                <h4 class="font-bold">Dados do Formulário:</h4>
+                <p><strong>Nome:</strong> ${data.name}</p>
+                <p><strong>Descrição:</strong> ${data.description}</p>
+                <p class="text-green-600 mt-2">✅ Formulário funcionando!</p>
+            `;
+            
+            testModal.style.display = 'none';
+            testForm.reset();
+        });
+        
+        console.log('Script carregado!');
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Chat API</title>
+</head>
+<body>
+    <h1>Test Chat API</h1>
+    <p>Room ID: <input type="number" id="roomId" value="1"></p>
+    <p>Message: <input type="text" id="message" value="teste"></p>
+    <button onclick="testSend()">Send Test Message</button>
+    <div id="result"></div>
+
+    <script>
+        async function testSend() {
+            const roomId = document.getElementById('roomId').value;
+            const content = document.getElementById('message').value;
+            
+            console.log('Testing API...');
+            console.log('Room ID:', roomId);
+            console.log('Content:', content);
+            
+            try {
+                const response = await fetch(`http://localhost:8000/api/rooms/${roomId}/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ content })
+                });
+                
+                console.log('Response status:', response.status);
+                const result = await response.json();
+                console.log('Result:', result);
+                
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = '<pre style="color: red;">' + error.message + '</pre>';
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -109,7 +109,11 @@
                 </div>
                 @elseif ($friend->pivot->status === 'accepted')
                 <div class="flex space-x-2">
-                    <button onclick="confirmRemoveFriend('{{ $friend->id }}', '{{ $friend->name }}')" class="w-full inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 text-sm">
+                    <a href="{{ route('chat.direct', $friend->id) }}" class="flex-1 inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 text-sm">
+                        <i class="ri-chat-3-line mr-2"></i>
+                        Chat
+                    </a>
+                    <button onclick="confirmRemoveFriend('{{ $friend->id }}', '{{ $friend->name }}')" class="flex-1 inline-flex items-center justify-center font-medium rounded-xl transition-colors whitespace-nowrap cursor-pointer border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 text-sm">
                         <i class="ri-user-unfollow-line mr-2"></i>
                         Remover
                     </button>

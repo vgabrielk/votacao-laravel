@@ -17,21 +17,8 @@ return new class extends Migration
             return;
         }
 
-        // Verificar e remover foreign key constraint se existir
-        $foreignKeys = DB::select("
-            SELECT CONSTRAINT_NAME 
-            FROM information_schema.KEY_COLUMN_USAGE 
-            WHERE TABLE_SCHEMA = DATABASE() 
-            AND TABLE_NAME = 'polls' 
-            AND COLUMN_NAME = 'group_id' 
-            AND CONSTRAINT_NAME != 'PRIMARY'
-        ");
-
-        foreach ($foreignKeys as $foreignKey) {
-            Schema::table('polls', function (Blueprint $table) use ($foreignKey) {
-                $table->dropForeign($foreignKey->CONSTRAINT_NAME);
-            });
-        }
+        // Para SQLite, não precisamos verificar foreign keys da mesma forma
+        // SQLite não suporta DROP FOREIGN KEY da mesma forma que MySQL
 
         // Verificar e remover colunas se existirem
         Schema::table('polls', function (Blueprint $table) {
