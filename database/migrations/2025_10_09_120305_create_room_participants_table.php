@@ -13,14 +13,28 @@ return new class extends Migration
     {
         Schema::create('room_participants', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('room_id')->constrained('rooms')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamp('joined_at')->useCurrent();
             $table->timestamp('last_read_at')->nullable();
             $table->timestamps();
             
             $table->unique(['room_id', 'user_id']);
+            $table->index(['room_id']);
+            $table->index(['user_id']);
         });
+
+        if (Schema::hasTable('rooms')) {
+            Schema::table('room_participants', function (Blueprint $table) {
+                $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
+            });
+        }
+
+        if (Schema::hasTable('users')) {
+            Schema::table('room_participants', function (Blueprint $table) {
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            });
+        }
     }
 
     /**

@@ -134,3 +134,4 @@ php artisan reverb:start --host=localhost --port=8080
 ## Suporte
 
 Para problemas técnicos ou dúvidas sobre o sistema de chat, consulte a documentação do Laravel Reverb ou entre em contato com a equipe de desenvolvimento.
+
